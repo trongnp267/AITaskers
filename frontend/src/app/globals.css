@@ -124,5 +124,47 @@
   .menu {
     display: none;
   }
+
+  .menu.show {
+    display: block;
+    width: 300px;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow-y: auto;
+    background-color: #000071;
+    z-index: 9999;
+  }
+
+  .menu > ul {
+    flex-direction: column;
+    gap: 0;
+    padding: 10px 0;
+  }
+
+  .menu > ul > li {
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    flex-wrap: wrap;
+  }
+
+  .menu > ul > li > a {
+    font-size: 14px;
+  }
+
+  .menu > ul > li ul {
+    position: static;
+    width: 100%;
+  }
+
+  .menu > ul > li > ul li {
+    flex-wrap: wrap;
+  }
+
+  .menu > ul > li > ul li a {
+    font-size: 14px;
+  }
 }
 /* End Menu */

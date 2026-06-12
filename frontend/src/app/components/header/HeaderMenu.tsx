@@ -1,7 +1,9 @@
 import Link from "next/link"
 import { FaAngleDown, FaAngleRight} from "react-icons/fa6"
 
-export const HeaderMenu = () => {
+export const HeaderMenu = (props: any) => {
+  const {showMenu} = props;
+  console.log(showMenu);
   const menuList = [
     {
       name: "Tìm chuyên gia",
@@ -137,7 +139,7 @@ export const HeaderMenu = () => {
 
   return (
     <>
-      <nav className="menu">
+      <nav className={"menu " + (showMenu ? "show" : "")}>
         <ul>
           {
             menuList.map((item: any, index: number) => (
