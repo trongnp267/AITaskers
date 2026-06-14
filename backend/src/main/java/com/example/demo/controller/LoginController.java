@@ -38,26 +38,28 @@ public class LoginController {
         }
     }
 
-    // --- BỔ SUNG ENDPOINT ĐĂNG KÝ TÀI KHOẢN ---
+    // --- THÊM ENDPOINT TIẾP NHẬN ĐĂNG KÝ VÀO ĐÂY ---
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterRequest registerData) {
         String username = registerData.getUsername();
 
-        // 1. Kiểm tra định dạng Email ngay tại đầu vào
+        // 1. Chặn nhanh định dạng Email ngay tại tầng Controller đầu vào
         if (username == null || !EMAIL_PATTERN.matcher(username).matches()) {
             return ResponseEntity.status(400).body("Username must be a valid email address!");
         }
 
-        // 2. Gọi Service để xử lý nghiệp vụ đăng ký
+        // 2. Gọi tầng Service xử lý các nghiệp vụ kiểm tra bên trong
         String result = userService.registerUser(registerData);
 
-        // 3. Phản hồi HTTP Status Code dựa trên kết quả nghiệp vụ (Ứng với rẽ nhánh trong Swimlane)
-        if (result.contains("Success")) {
-            return ResponseEntity.ok(result); // 200 OK thành công
+        // 3. Phân tích kết quả trả về để map thành mã HTTP Status thích hợp
+        if (result.equals("Registration Success!")) {
+            return ResponseEntity.ok(result); // Trả về 200 OK
+        } else if (result.equals("Passwords do not match!")) {
+            return ResponseEntity.status(400).body(result); // Trả về 400 Bad Request
         } else if (result.equals("Account already exists!")) {
-            return ResponseEntity.status(409).body(result); // 409 Conflict (Trùng tài khoản)
+            return ResponseEntity.status(409).body(result); // Trả về 409 Conflict (Trùng tài khoản)
         } else {
-            return ResponseEntity.status(400).body(result); // 400 Bad Request (Mật khẩu không khớp)
+            return ResponseEntity.status(500).body("Internal Server Error");
         }
     }
 }

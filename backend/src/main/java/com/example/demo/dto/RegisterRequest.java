@@ -1,30 +1,50 @@
 package com.example.demo.dto;
 
 public class RegisterRequest {
-    private String username;        // Đây chính là Email
+    private String username;        
     private String password;
-    private String confirmPassword; // Xác nhận lại mật khẩu
-    private String role;            // Vai trò (Ví dụ: CLIENT, FREELANCER...)
+    private String confirmPassword; 
+    private String role; // Người dùng chọn "CLIENT" hoặc "EXPERT"
+
+    // --- Các trường thông tin bổ sung cho CLIENT ---
+    private String companyName;
+    private String industry;
+    private String companySize;
+    private String description;
+
+    // --- Các trường thông tin bổ sung cho EXPERT ---
+    private String skill;
+    private String experience;
+    private String certificate;
+    private Double hourlyRate;
 
     public RegisterRequest() {}
 
-    public RegisterRequest(String username, String password, String confirmPassword, String role) {
-        this.username = username;
-        this.password = password;
-        this.confirmPassword = confirmPassword;
-        this.role = role;
-    }
-
-    // Getters and Setters
+    // Tạo nhanh các Getters và Setters cho tất cả các trường trên:
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
-
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
-
     public String getConfirmPassword() { return confirmPassword; }
     public void setConfirmPassword(String confirmPassword) { this.confirmPassword = confirmPassword; }
-
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
+
+    public String getCompanyName() { return companyName; }
+    public void setCompanyName(String companyName) { this.companyName = companyName; }
+    public String getIndustry() { return industry; }
+    public void setIndustry(String industry) { this.industry = industry; }
+    public String getCompanySize() { return companySize; }
+    public void setCompanySize(String companySize) { this.companySize = companySize; }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+
+    public String getSkill() { return skill; }
+    public void setSkill(String skill) { this.skill = skill; }
+    public String getExperience() { return experience; }
+    public void setExperience(String experience) { this.experience = experience; }
+    public String getCertificate() { return certificate; }
+    public void setCertificate(String certificate) { this.certificate = certificate; }
+    public Double getHourlyRate() { return hourlyRate; }
+    public void setHourlyRate(Double hourlyRate) { this.hourlyRate = hourlyRate; }
 }
