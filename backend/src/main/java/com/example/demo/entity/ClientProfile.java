@@ -1,12 +1,12 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-
+import lombok.Data;
 @Entity
 @Table(name = "client_profiles")
 public class ClientProfile {
     @Id
-    private Long id; // Trùng với ID của User để liên kết One-to-One
+    private Long id;
 
     private String companyName;
     private String industry;
@@ -16,13 +16,12 @@ public class ClientProfile {
     private String description;
 
     @OneToOne
-    @MapsId // Giúp đồng bộ ID của Profile theo ID của User
+    @MapsId
     @JoinColumn(name = "user_id")
     private User user;
 
     public ClientProfile() {}
 
-    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getCompanyName() { return companyName; }

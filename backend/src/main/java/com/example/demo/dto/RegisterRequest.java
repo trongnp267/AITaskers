@@ -1,18 +1,17 @@
 package com.example.demo.dto;
+import lombok.Data;
 
 public class RegisterRequest {
     private String username;        
     private String password;
     private String confirmPassword; 
-    private String role; // Người dùng chọn "CLIENT" hoặc "EXPERT"
+    private String role;
 
-    // --- Các trường thông tin bổ sung cho CLIENT ---
     private String companyName;
     private String industry;
     private String companySize;
     private String description;
 
-    // --- Các trường thông tin bổ sung cho EXPERT ---
     private String skill;
     private String experience;
     private String certificate;
@@ -20,7 +19,6 @@ public class RegisterRequest {
 
     public RegisterRequest() {}
 
-    // Tạo nhanh các Getters và Setters cho tất cả các trường trên:
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
     public String getPassword() { return password; }
