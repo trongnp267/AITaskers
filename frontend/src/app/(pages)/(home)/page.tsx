@@ -1,7 +1,7 @@
 import { ProfileCart } from "@/app/components/cart/ProfileCart";
 import { Section1 } from "@/app/components/section/Section1";
 
-export default function Home() {
+export default function Page() {
   return (
     <>
       {/* Section 1 */}
