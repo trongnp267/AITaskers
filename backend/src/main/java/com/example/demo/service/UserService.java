@@ -4,10 +4,9 @@ import com.example.demo.dto.RegisterRequest;
 import com.example.demo.entity.*;
 import com.example.demo.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -16,15 +15,16 @@ public class UserService {
     @Autowired private UserRepository userRepository;
     @Autowired private ClientProfileRepository clientProfileRepository;
     @Autowired private ExpertProfileRepository expertProfileRepository;
-    @Autowired private AiCheckerService aiCheckerService;
+    
+    // Sử dụng BCrypt để băm mật khẩu
+    @Autowired private BCryptPasswordEncoder passwordEncoder;
 
-    // 1. Logic Đăng nhập
     public String checkLogin(String username, String password) {
         Optional<User> userOpt = userRepository.findByUsername(username);
         if (userOpt.isPresent()) {
             User user = userOpt.get();
-            // Trong thực tế, hãy dùng BCryptPasswordEncoder thay vì so sánh chuỗi
-            if (user.getPassword().equals(password)) {
+            // Sử dụng matches() để so khớp mật khẩu thuần với mật khẩu đã băm
+            if (passwordEncoder.matches(password, user.getPassword())) {
                 return "Login Success! Role: " + user.getRole();
             }
             return "Invalid password!";
@@ -32,22 +32,25 @@ public class UserService {
         return "User not found!";
     }
 
-    // 2. Logic Đăng ký (Có sử dụng AI cho Expert)
     @Transactional
     public String registerUser(RegisterRequest request) {
+        // Kiểm tra khớp mật khẩu
         if (request.getPassword() == null || !request.getPassword().equals(request.getConfirmPassword())) {
             return "Passwords do not match!";
         }
 
+        // Kiểm tra tồn tại
         if (userRepository.findByUsername(request.getUsername()).isPresent()) {
             return "Account already exists!";
         }
 
-        // Tạo User
-        User newUser = new User(request.getUsername(), request.getPassword(), request.getRole().toUpperCase());
+        // Băm mật khẩu trước khi lưu vào DB
+        String hashedPassword = passwordEncoder.encode(request.getPassword());
+        
+        User newUser = new User(request.getUsername(), hashedPassword, request.getRole().toUpperCase());
         User savedUser = userRepository.save(newUser);
 
-        // Phân loại lưu profile
+        // Lưu profile tương ứng
         if ("CLIENT".equals(savedUser.getRole())) {
             ClientProfile client = new ClientProfile();
             client.setCompanyName(request.getCompanyName());
@@ -64,17 +67,6 @@ public class UserService {
             expert.setCertificate(request.getCertificate());
             expert.setHourlyRate(request.getHourlyRate());
             expert.setUser(savedUser);
-
-            try {
-                Map<String, Object> aiResult = aiCheckerService.checkExpertProfile(
-                    request.getSkill(), request.getExperience(), request.getCertificate(), request.getHourlyRate()
-                );
-                expert.setAiScore((Integer) aiResult.get("score"));
-                expert.setAiFeedback((String) aiResult.get("feedback"));
-            } catch (Exception e) {
-                expert.setAiScore(0);
-                expert.setAiFeedback("AI evaluation failed.");
-            }
             expertProfileRepository.save(expert);
         }
 

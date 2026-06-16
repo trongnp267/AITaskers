@@ -1,7 +1,7 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+
 @Entity
 @Table(name = "expert_profiles")
 public class ExpertProfile {
@@ -12,12 +12,6 @@ public class ExpertProfile {
     private String experience;
     private String certificate;
     private Double hourlyRate;
-    
-    // 1. PHẢI CÓ: Khai báo 2 thuộc tính lưu dữ liệu AI
-    private Integer aiScore; 
-
-    @Column(columnDefinition = "TEXT")
-    private String aiFeedback; 
 
     @OneToOne
     @MapsId
@@ -26,8 +20,7 @@ public class ExpertProfile {
 
     public ExpertProfile() {}
 
-    // ==================== GETTERS AND SETTERS ====================
-
+    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getSkill() { return skill; }
@@ -40,21 +33,4 @@ public class ExpertProfile {
     public void setHourlyRate(Double hourlyRate) { this.hourlyRate = hourlyRate; }
     public User getUser() { return user; }
     public void setUser(User user) { this.user = user; }
-
-    // 2. PHẢI CÓ: Cặp hàm Setter/Getter này để UserService gọi mà không bị báo lỗi đỏ
-    public Integer getAiScore() {
-        return aiScore;
-    }
-
-    public void setAiScore(Integer aiScore) {
-        this.aiScore = aiScore;
-    }
-
-    public String getAiFeedback() {
-        return aiFeedback;
-    }
-
-    public void setAiFeedback(String aiFeedback) {
-        this.aiFeedback = aiFeedback;
-    }
 }

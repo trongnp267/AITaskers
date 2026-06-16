@@ -9,14 +9,17 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = "*")
-public class AuthController {
+public class RegisterController {
 
     @Autowired
     private UserService userService;
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterRequest request) {
+        // Gọi service để xử lý đăng ký
         String result = userService.registerUser(request);
+        
+        // Kiểm tra kết quả trả về từ service
         if (result.contains("Success")) {
             return ResponseEntity.ok(result);
         } else {
