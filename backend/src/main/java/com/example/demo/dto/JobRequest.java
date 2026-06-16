@@ -11,6 +11,9 @@ public class JobRequest {
     private BigDecimal budgetMin;
     private BigDecimal budgetMax;
     private LocalDate deadline;
+    private String positionRequirement;
+    private String requiredTechnologies;
+    private Integer minExperienceYears;
 
     public JobRequest() {
     }
@@ -37,6 +40,30 @@ public class JobRequest {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getPositionRequirement() {
+        return positionRequirement;
+    }
+
+    public void setPositionRequirement(String positionRequirement) {
+        this.positionRequirement = positionRequirement;
+    }
+
+    public String getRequiredTechnologies() {
+        return requiredTechnologies;
+    }
+
+    public void setRequiredTechnologies(String requiredTechnologies) {
+        this.requiredTechnologies = requiredTechnologies;
+    }
+
+    public Integer getMinExperienceYears() {
+        return minExperienceYears;
+    }
+
+    public void setMinExperienceYears(Integer minExperienceYears) {
+        this.minExperienceYears = minExperienceYears;
     }
 
     public BigDecimal getBudgetMin() {

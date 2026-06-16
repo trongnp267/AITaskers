@@ -34,11 +34,14 @@ public class JobService {
         job.setClient(client);
         job.setTitle(request.getTitle());
         job.setDescription(request.getDescription());
+        job.setPositionRequirement(request.getPositionRequirement());
+        job.setRequiredTechnologies(request.getRequiredTechnologies());
+        job.setMinExperienceYears(request.getMinExperienceYears());
         job.setBudgetMin(request.getBudgetMin());
         job.setBudgetMax(request.getBudgetMax());
         job.setDeadline(request.getDeadline());
 
-        job.setJobStatus("OPEN");
+        job.setJobStatus("OPEN");   
         job.setCreatedAt(LocalDateTime.now());
         job.setUpdatedAt(LocalDateTime.now());
 
@@ -65,6 +68,22 @@ public class JobService {
 
         if (request.getDescription() == null || request.getDescription().trim().isEmpty()) {
             throw new RuntimeException("Job description is required");
+        }
+
+        if (request.getPositionRequirement() == null || request.getPositionRequirement().trim().isEmpty()) {
+            throw new RuntimeException("Position requirement is required");
+        }
+
+        if (request.getRequiredTechnologies() == null || request.getRequiredTechnologies().trim().isEmpty()) {
+            throw new RuntimeException("Required technologies are required");
+        }
+
+        if (request.getMinExperienceYears() == null) {
+            throw new RuntimeException("Minimum experience years is required");
+        }
+
+        if (request.getMinExperienceYears() < 0) {
+            throw new RuntimeException("Minimum experience years must be greater than or equal to 0");
         }
 
         if (request.getBudgetMin() == null || request.getBudgetMax() == null) {

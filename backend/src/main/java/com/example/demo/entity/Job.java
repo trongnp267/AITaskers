@@ -1,10 +1,19 @@
 package com.example.demo.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "Job")
@@ -25,6 +34,15 @@ public class Job {
 
     @Column(name = "description", columnDefinition = "NVARCHAR(MAX)")
     private String description;
+
+    @Column(name = "position_requirement")
+    private String positionRequirement;
+
+    @Column(name = "required_technologies")
+    private String requiredTechnologies;
+
+    @Column(name = "min_experience_years")
+    private Integer minExperienceYears;
 
     @Column(name = "budget_min", nullable = false)
     private BigDecimal budgetMin;
@@ -85,6 +103,30 @@ public class Job {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getPositionRequirement() {
+        return positionRequirement;
+    }
+
+    public void setPositionRequirement(String positionRequirement) {
+        this.positionRequirement = positionRequirement;
+    }
+
+    public String getRequiredTechnologies() {
+        return requiredTechnologies;
+    }
+
+    public void setRequiredTechnologies(String requiredTechnologies) {
+        this.requiredTechnologies = requiredTechnologies;
+    }
+
+    public Integer getMinExperienceYears() {
+        return minExperienceYears;
+    }
+
+    public void setMinExperienceYears(Integer minExperienceYears) {
+        this.minExperienceYears = minExperienceYears;
     }
 
     public BigDecimal getBudgetMin() {
