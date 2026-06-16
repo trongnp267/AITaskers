@@ -5,7 +5,7 @@ export const CompanyCart = () => {
   return (
     <>
       <div
-        className="company-cart"
+        className="cart-item"
       >
         <Link
           href="#"

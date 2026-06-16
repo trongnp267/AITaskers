@@ -1,4 +1,7 @@
-export const Select1 = () => {
+export const Select1 = (props: {
+  totalPage?: number
+}) => {
+  const {totalPage = 1} = props;
   return (
     <>
       <div
@@ -9,9 +12,11 @@ export const Select1 = () => {
           id=""
           className="rounded-[8px] border border-[#DEDEDE] h-[44px] px-[18px] font-[400] text-[16px] text-[#414042]"
         >
-          <option defaultValue="1">Trang 1</option>
-          <option defaultValue="2">Trang 2</option>
-          <option defaultValue="3">Trang 3</option>
+          {
+            Array(totalPage).fill("").map((_, index) => (
+              <option key={index} defaultValue={index + 1}>Trang {index + 1}</option>
+            ))
+          }
         </select>
       </div>
     </>
