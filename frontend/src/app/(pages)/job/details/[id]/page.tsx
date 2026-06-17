@@ -1,8 +1,9 @@
+import { CompanyDescription } from "@/app/components/description/CompanyDescription";
 import { Tag1 } from "@/app/components/tag/Tag1";
 import { Tag2 } from "@/app/components/tag/Tag2";
 import Link from "next/link";
 import { FaBriefcase, FaUserTie } from "react-icons/fa"
-import { FaLocationDot } from "react-icons/fa6"
+import { FaArrowRight, FaLocationDot } from "react-icons/fa6"
 
 export default function Page() {
   return (
@@ -61,8 +62,36 @@ export default function Page() {
             
             <div>
               {/* Thông tin công ty */}
-              <div>
-                Đây là khối thông tin công ty
+              <div className="p-[20px] bg-white border border-[#DEDEDE] rounded-[8px]">
+                <div className="flex gap-[12px] mb-[20px]">
+                  <img src="/assets/images/company-in4-logo.png" alt="" className="w-[100px] aspect-square rounded-[4px] object-contain" />
+                  <div className="flex-1">
+                    <div className="font-[700] text-[18px] text-[#121212] mb-[10px]">
+                      LG CNS Việt Nam
+                    </div>
+                    <Link href="#" className="font-[400] text-[16px] text-[#0088FF] flex items-center gap-[8px]">
+                      Xem công ty <FaArrowRight />
+                    </Link>
+                  </div>
+                </div>
+                <div className="flex flex-col gap-[10px]">
+                  <CompanyDescription
+                    label="Mô hình công ty"
+                    content="Sản phẩm"
+                  />
+                  <CompanyDescription
+                    label="Quy mô công ty"
+                    content="151 - 300 nhân viên"
+                  />
+                  <CompanyDescription
+                    label="Thời gian làm việc"
+                    content="Thứ 2 - Thứ 6"
+                  />
+                  <CompanyDescription
+                    label="Làm việc ngoài giờ"
+                    content="Không có OT"
+                  />
+                </div>
               </div>
               {/* Hết Thông tin công ty */}
             </div>
