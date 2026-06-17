@@ -1,4 +1,5 @@
 import { CompanyDescription } from "@/app/components/description/CompanyDescription";
+import { BoxGroup1 } from "@/app/components/form/BoxGroup1";
 import { Tag1 } from "@/app/components/tag/Tag1";
 import { Tag2 } from "@/app/components/tag/Tag2";
 import Link from "next/link";
@@ -64,6 +65,42 @@ export default function Page() {
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia doloremque voluptas, doloribus maxime, rerum quod reprehenderit atque recusandae itaque natus eos inventore ad sapiente voluptatum repellendus minus laborum ex iusto. Lorem ipsum dolor, sit amet consectetur adipisicing elit. A natus doloribus nemo ullam. Doloribus sed molestiae consequuntur voluptate enim nesciunt quisquam aliquid accusamus quam, sint voluptas, doloremque hic inventore eligendi. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Tempora sit explicabo voluptates aspernatur sint tempore voluptatibus inventore nihil accusamus veritatis dolores pariatur magnam iusto, delectus error. Doloribus voluptates tempore voluptatum!
               </div>
               {/* Hết Mô tả chi tiết công việc */}
+
+              {/* Form ứng tuyển */}
+              <div className="bg-white rounded-[8px] border border-[#DEDEDE] p-[20px] mt-[20px]">
+                <h2 className="font-[700] text-[20px] text-black mb-[20px]">
+                  Ứng tuyển ngay
+                </h2>
+                <form 
+                  action=""
+                  className="flex flex-col gap-[15px]"
+                >
+                  <BoxGroup1
+                    label="Họ tên *"
+                    name="name"
+                    type="text"
+                  />
+                  <BoxGroup1
+                    label="Email *"
+                    name="email"
+                    type="email"
+                  />
+                  <BoxGroup1
+                    label="Số điện thoại *"
+                    name="phone"
+                    type="text"
+                  />
+                  <BoxGroup1
+                    label="File CV dạng PDF *"
+                    name="fileCV"
+                    type="file"
+                  />
+                  <button className="h-[48px] rounded-[4px] bg-[#0088FF] px-[10px] font-[700] text-[16px] text-white flex items-center justify-center">
+                    Gửi CV ứng tuyển
+                  </button>
+                </form>
+              </div>
+              {/* Hết Form ứng tuyển */}
             </div>
             
             <div>
