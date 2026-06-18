@@ -2,6 +2,7 @@ package com.example.demo.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 public class JobRequest {
 
@@ -12,7 +13,7 @@ public class JobRequest {
     private BigDecimal budgetMax;
     private LocalDate deadline;
     private String positionRequirement;
-    private String requiredTechnologies;
+    private List<String> jobSkills;
     private Integer minExperienceYears;
 
     public JobRequest() {
@@ -50,12 +51,12 @@ public class JobRequest {
         this.positionRequirement = positionRequirement;
     }
 
-    public String getRequiredTechnologies() {
-        return requiredTechnologies;
+    public List<String> getJobSkills() {
+        return jobSkills;
     }
 
-    public void setRequiredTechnologies(String requiredTechnologies) {
-        this.requiredTechnologies = requiredTechnologies;
+    public void setJobSkills(List<String> jobSkills) {
+        this.jobSkills = jobSkills;
     }
 
     public Integer getMinExperienceYears() {

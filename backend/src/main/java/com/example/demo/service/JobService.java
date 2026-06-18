@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.example.demo.dto.JobRequest;
 import com.example.demo.entity.ClientProfile;
 import com.example.demo.entity.Job;
+import com.example.demo.entity.JobSkill;
 import com.example.demo.repository.ClientProfileRepository;
 import com.example.demo.repository.JobRepository;
 
@@ -35,11 +36,15 @@ public class JobService {
         job.setTitle(request.getTitle());
         job.setDescription(request.getDescription());
         job.setPositionRequirement(request.getPositionRequirement());
-        job.setRequiredTechnologies(request.getRequiredTechnologies());
         job.setMinExperienceYears(request.getMinExperienceYears());
         job.setBudgetMin(request.getBudgetMin());
         job.setBudgetMax(request.getBudgetMax());
         job.setDeadline(request.getDeadline());
+
+        for (String skillName : request.getJobSkills()) {
+            JobSkill jobSkill = new JobSkill(job, skillName);
+            job.getJobSkills().add(jobSkill);
+        }
 
         job.setJobStatus("OPEN");   
         job.setCreatedAt(LocalDateTime.now());
@@ -74,8 +79,14 @@ public class JobService {
             throw new RuntimeException("Position requirement is required");
         }
 
-        if (request.getRequiredTechnologies() == null || request.getRequiredTechnologies().trim().isEmpty()) {
-            throw new RuntimeException("Required technologies are required");
+        if (request.getJobSkills() == null || request.getJobSkills().isEmpty()) {
+            throw new RuntimeException("Job skills are required");
+        }
+
+        for (String skill : request.getJobSkills()) {
+            if (skill == null || skill.trim().isEmpty()) {
+                throw new RuntimeException("Job skill cannot be empty");
+            }
         }
 
         if (request.getMinExperienceYears() == null) {

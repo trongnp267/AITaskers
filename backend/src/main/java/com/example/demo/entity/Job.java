@@ -3,9 +3,12 @@ package com.example.demo.entity;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,7 +16,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+
 
 @Entity
 @Table(name = "Job")
@@ -38,11 +43,11 @@ public class Job {
     @Column(name = "position_requirement")
     private String positionRequirement;
 
-    @Column(name = "required_technologies")
-    private String requiredTechnologies;
-
     @Column(name = "min_experience_years")
     private Integer minExperienceYears;
+
+    @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<JobSkill> jobSkills = new ArrayList<>();
 
     @Column(name = "budget_min", nullable = false)
     private BigDecimal budgetMin;
@@ -113,20 +118,20 @@ public class Job {
         this.positionRequirement = positionRequirement;
     }
 
-    public String getRequiredTechnologies() {
-        return requiredTechnologies;
-    }
-
-    public void setRequiredTechnologies(String requiredTechnologies) {
-        this.requiredTechnologies = requiredTechnologies;
-    }
-
     public Integer getMinExperienceYears() {
         return minExperienceYears;
     }
 
     public void setMinExperienceYears(Integer minExperienceYears) {
         this.minExperienceYears = minExperienceYears;
+    }
+
+    public List<JobSkill> getJobSkills() {
+        return jobSkills;
+    }
+
+    public void setJobSkills(List<JobSkill> jobSkills) {
+        this.jobSkills = jobSkills;
     }
 
     public BigDecimal getBudgetMin() {
