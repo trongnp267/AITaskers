@@ -4,6 +4,7 @@ import Link from "next/link"
 import { FaBars } from "react-icons/fa6"
 import { HeaderMenu } from "./HeaderMenu"
 import { useState } from "react"
+import { HeaderAccount } from "./HeaderAccount"
 
 export const Header = () => {
   const [showMenu, setShowMenu] = useState(false);
@@ -24,11 +25,7 @@ export const Header = () => {
             <HeaderMenu
               showMenu={showMenu}
             />
-            <div className="sm:text-[16px] text-[12px] font-[600] text-[#FFFFFF] flex gap-[5px]">
-              <Link href="#">Đăng nhập</Link>
-              <span>/</span> 
-              <Link href="#">Đăng ký</Link>
-            </div>
+            <HeaderAccount />
             <button 
               className="text-[23px] text-[#FFFFFF] lg:hidden ml-[12px] cursor-pointer"
               onClick={() => setShowMenu(true)}

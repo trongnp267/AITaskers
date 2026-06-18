@@ -90,6 +90,12 @@ button {
 .menu > ul > li > ul {
   width: 280px;
   top: 100%;
+  left: 0;
+}
+
+.menu > ul > li > ul.inner-right {
+  left: auto;
+  right: 0;
 }
 
 .menu > ul > li:hover > ul {
