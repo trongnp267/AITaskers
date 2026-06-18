@@ -1,21 +1,21 @@
 import Link from "next/link"
 import { FaUserTie } from "react-icons/fa"
 
-export const CompanyCart = () => {
+export const CompanyCard = () => {
   return (
     <>
       <div
-        className="cart-item"
+        className="card-item"
       >
         <Link
           href="#"
         >
-          <img src="assets/images/bg-image-company-cart.svg" alt="" className="inner-bg" />
+          <img src="/assets/images/bg-image-company-cart.svg" alt="" className="inner-bg" />
           <div className="inner-main">
             <div
               className="inner-image sm:w-[160px] w-[125px] sm:h-[160px] h-[125px] sm:mt-[32px] mt-[20px] sm:mb-[24px] mb-[16px]"
             >
-              <img src="assets/images/lg-company.png" alt=""/>
+              <img src="/assets/images/lg-company.png" alt=""/>
             </div>
             <div className="sm:h-[50px] h-[40px] font-[700] sm:text-[18px] text-[14px] text-[#121212] text-center line-clamp-2 sm:mx-[16px] mx-[8px]">
               LG Electronics Development Vietnam (LGEDV)

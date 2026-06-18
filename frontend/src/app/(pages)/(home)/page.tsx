@@ -1,4 +1,4 @@
-import { ProfileCart } from "@/app/components/cart/ProfileCart";
+import { ProfileCard } from "@/app/components/card/ProfileCard";
 import { Section1 } from "@/app/components/section/Section1";
 
 export default function Page() {
@@ -15,15 +15,15 @@ export default function Page() {
             Các chuyên gia AI hàng đầu
           </h2>
           <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 lg:gap-x-[20px] gap-x-[10px] gap-y-[20px]">
-            <ProfileCart />
-            <ProfileCart />
-            <ProfileCart />
-            <ProfileCart />
-            <ProfileCart />
-            <ProfileCart />
-            <ProfileCart />
-            <ProfileCart />
-            <ProfileCart />
+            <ProfileCard />
+            <ProfileCard />
+            <ProfileCard />
+            <ProfileCard />
+            <ProfileCard />
+            <ProfileCard />
+            <ProfileCard />
+            <ProfileCard />
+            <ProfileCard />
           </div>
         </div>
       </div>

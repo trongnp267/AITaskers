@@ -1,4 +1,4 @@
-import { ProfileCart } from "@/app/components/cart/ProfileCart";
+import { ProfileCard } from "@/app/components/card/ProfileCard";
 import { Section1 } from "@/app/components/section/Section1";
 import { Select1 } from "@/app/components/select/Select1";
 
@@ -43,13 +43,13 @@ export default function Page() {
           <div
             className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-[20px]"
           >
-            <ProfileCart />
-            <ProfileCart />
-            <ProfileCart />
-            <ProfileCart />
-            <ProfileCart />
-            <ProfileCart />
-            <ProfileCart />
+            <ProfileCard />
+            <ProfileCard />
+            <ProfileCard />
+            <ProfileCard />
+            <ProfileCard />
+            <ProfileCard />
+            <ProfileCard />
           </div>
           <Select1 />
         </div>

@@ -1,4 +1,4 @@
-import { JobCart } from "@/app/components/cart/JobCard";
+import { JobCard } from "@/app/components/card/JobCard";
 import { Section1 } from "@/app/components/section/Section1";
 import { Select1 } from "@/app/components/select/Select1";
 
@@ -45,13 +45,13 @@ export default function Page() {
           <div
             className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-x-[20px] gap-y-[20px]"
           >
-            <JobCart />
-            <JobCart />
-            <JobCart />
-            <JobCart />
-            <JobCart />
-            <JobCart />
-            <JobCart />
+            <JobCard />
+            <JobCard />
+            <JobCard />
+            <JobCard />
+            <JobCard />
+            <JobCard />
+            <JobCard />
           </div>
           <Select1 totalPage={4} />
         </div>

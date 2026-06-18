@@ -4,7 +4,7 @@ import { LuBriefcaseBusiness } from "react-icons/lu"
 import { Tag1 } from "../tag/Tag1"
 
 
-export const ProfileCart = () => {
+export const ProfileCard = () => {
   return (
     <Link
       href="#"

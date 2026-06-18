@@ -4,7 +4,7 @@ import { FaLocationDot } from "react-icons/fa6"
 import { Tag1 } from "../tag/Tag1"
 import { Tag2 } from "../tag/Tag2"
 
-export const JobCart = () => {
+export const JobCard = () => {
   return (
     <>
       <div className="card-item">
