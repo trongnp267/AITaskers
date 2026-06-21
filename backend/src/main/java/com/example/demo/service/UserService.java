@@ -16,14 +16,12 @@ public class UserService {
     @Autowired private ClientProfileRepository clientProfileRepository;
     @Autowired private ExpertProfileRepository expertProfileRepository;
     
-    // Sử dụng BCrypt để băm mật khẩu
     @Autowired private BCryptPasswordEncoder passwordEncoder;
 
     public String checkLogin(String username, String password) {
         Optional<User> userOpt = userRepository.findByUsername(username);
         if (userOpt.isPresent()) {
             User user = userOpt.get();
-            // Sử dụng matches() để so khớp mật khẩu thuần với mật khẩu đã băm
             if (passwordEncoder.matches(password, user.getPassword())) {
                 return "Login Success! Role: " + user.getRole();
             }
