@@ -5,12 +5,12 @@ export const HeaderAccount = () => {
     <>
       <div className="sm:text-[16px] text-[12px] font-[600] text-[#FFFFFF] flex gap-[5px]">
         {/* Chưa đăng nhập */}
-        {/* <Link href="#">Đăng nhập</Link>
+        <Link href="/login">Đăng nhập</Link>
         <span>/</span> 
-        <Link href="#">Đăng ký</Link> */}
+        <Link href="/register">Đăng ký</Link>
 
         {/* Đã đăng nhập */}
-        <nav className="menu">
+        {/* <nav className="menu">
           <ul>
             <li>
               <Link href={"#"}>LG Elect...</Link>
@@ -30,7 +30,7 @@ export const HeaderAccount = () => {
               </ul>
             </li>
           </ul>
-        </nav>
+        </nav> */}
       </div>
     </>
   )
