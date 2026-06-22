@@ -56,7 +56,7 @@ export const HeaderAccount = () => {
                           </li>
 
                           <li>
-                            <Link href="#">
+                            <Link href="/company-manager/job/list">
                               Quản lý bài đăng
                             </Link>
                           </li>
