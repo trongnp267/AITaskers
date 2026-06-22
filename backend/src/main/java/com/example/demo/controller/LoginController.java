@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.UserResponse;
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.JwtService;
@@ -32,13 +33,18 @@ public class LoginController {
 
         if (userOpt.isPresent()) {
             User user = userOpt.get();
+            UserResponse userResponse = new UserResponse();
+            userResponse.setId(user.getId());
+            userResponse.setUsername(user.getUsername());
+            userResponse.setRole(user.getRole());
             
             String token = jwtService.generateToken(user);
             
             return ResponseEntity.ok(Map.of(
                 "status", "success",
                 "message", "Login Successful",
-                "token", token
+                "token", token,
+                "user", userResponse
             ));
         } else {
             return ResponseEntity.status(401).body(Map.of(
