@@ -1,15 +1,6 @@
 package com.project.dto;
-
-import java.time.LocalDateTime;
-
-public record ReviewDTO(
-        Long id,
-        String paymentId,
-        String jobId,
-        Long clientId,
-        Long expertId,
-        Integer score,
-        String comment,
-        LocalDateTime createdAt
-) {
-}
+import com.project.model.ReviewStatus; import java.time.LocalDateTime; import java.util.UUID;
+public record ReviewDTO(UUID reviewId, UUID projectId, UUID paymentId, UUID clientProfileId,
+ UUID expertProfileId, Integer ratingStar, String reviewComment, Integer deliveryQuality,
+ Integer communicationQuality, Integer deadlineSatisfaction, Boolean wouldHireAgain,
+ ReviewStatus reviewStatus, LocalDateTime createdAt) {}

@@ -12,6 +12,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "project_notifications")
@@ -22,7 +23,7 @@ public class Notification {
     private Long id;
 
     @NotNull
-    private Long userId;
+    private UUID userId;
 
     @NotBlank
     private String title;
@@ -37,7 +38,7 @@ public class Notification {
 
     private String referenceType;
 
-    private Long referenceId;
+    private UUID referenceId;
 
     private Boolean sent = false;
 
@@ -72,14 +73,11 @@ public class Notification {
         this.id = id;
     }
 
-    public Long getUserId() {
+    public UUID getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
-        if (userId != null && userId <= 0) {
-            throw new IllegalArgumentException("User id must be greater than 0");
-        }
+    public void setUserId(UUID userId) {
         this.userId = userId;
     }
 
@@ -124,14 +122,11 @@ public class Notification {
         this.referenceType = referenceType;
     }
 
-    public Long getReferenceId() {
+    public UUID getReferenceId() {
         return referenceId;
     }
 
-    public void setReferenceId(Long referenceId) {
-        if (referenceId != null && referenceId <= 0) {
-            throw new IllegalArgumentException("Reference id must be greater than 0");
-        }
+    public void setReferenceId(UUID referenceId) {
         this.referenceId = referenceId;
     }
 

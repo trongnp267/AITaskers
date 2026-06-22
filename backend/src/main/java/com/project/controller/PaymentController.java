@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.UUID;
 
 @RestController
 @RequestMapping({"/api/project/payments", "/payments"})
@@ -29,7 +30,7 @@ public class PaymentController {
     }
 
     @GetMapping
-    public ResponseEntity<?> findById(@RequestParam String paymentId) {
+    public ResponseEntity<?> findById(@RequestParam UUID paymentId) {
         return ResponseEntity.ok(response(paymentService.findById(paymentId)));
     }
 
@@ -37,7 +38,7 @@ public class PaymentController {
         return Map.of(
                 "paymentId", payment.getId(),
                 "status", payment.getStatus().name().toLowerCase(),
-                "updatedAt", payment.getUpdatedAt()
+                "createdAt", payment.getCreatedAt()
         );
     }
 }

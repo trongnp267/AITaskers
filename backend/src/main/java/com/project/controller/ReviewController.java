@@ -6,6 +6,7 @@ import com.project.service.ReviewService;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,7 +37,7 @@ public class ReviewController {
     }
 
     @GetMapping("/expert/{expertId}")
-    public ResponseEntity<?> findByExpert(@PathVariable Long expertId) {
+    public ResponseEntity<?> findByExpert(@PathVariable UUID expertId) {
         List<ReviewDTO> reviews = reviewService.findByExpertId(expertId);
         return ResponseEntity.ok(Map.of(
                 "success", true,

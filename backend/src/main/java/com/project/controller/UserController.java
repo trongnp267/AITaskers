@@ -5,6 +5,7 @@ import com.project.service.IUserService;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,11 +51,9 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> findById(@PathVariable Long id) {
+    public ResponseEntity<?> findById(@PathVariable UUID id) {
         try {
-            if (id == null || id <= 0) {
-                return ResponseEntity.badRequest().body(Map.of("message", "User id must be greater than 0"));
-            }
+            if (id == null) return ResponseEntity.badRequest().body(Map.of("message", "User id is required"));
 
             return ResponseEntity.ok(userService.findById(id));
         } catch (RuntimeException exception) {
@@ -63,11 +62,9 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody UserDTO userDTO) {
+    public ResponseEntity<?> update(@PathVariable UUID id, @Valid @RequestBody UserDTO userDTO) {
         try {
-            if (id == null || id <= 0) {
-                return ResponseEntity.badRequest().body(Map.of("message", "User id must be greater than 0"));
-            }
+            if (id == null) return ResponseEntity.badRequest().body(Map.of("message", "User id is required"));
             if (userDTO == null) {
                 return ResponseEntity.badRequest().body(Map.of("message", "User data is required"));
             }

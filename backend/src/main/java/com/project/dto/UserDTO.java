@@ -2,10 +2,11 @@ package com.project.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import java.util.UUID;
 
 public class UserDTO {
 
-    private Long id;
+    private UUID id;
 
     @NotBlank
     private String name;
@@ -16,11 +17,14 @@ public class UserDTO {
 
     private Boolean subscribed = true;
 
-    public Long getId() {
+    @NotBlank
+    private String userRole;
+
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -53,4 +57,7 @@ public class UserDTO {
     public void setSubscribed(Boolean subscribed) {
         this.subscribed = subscribed == null ? true : subscribed;
     }
+
+    public String getUserRole() { return userRole; }
+    public void setUserRole(String userRole) { this.userRole = userRole; }
 }

@@ -1,75 +1,18 @@
 package com.project.dto;
-
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-
+import jakarta.validation.constraints.*; import java.util.UUID;
 public class ReviewRequest {
-
-    @NotBlank
-    private String paymentId;
-
-    private String jobId;
-
-    @NotNull
-    private Long clientId;
-
-    @NotNull
-    private Long expertId;
-
-    @NotNull
-    @Min(1)
-    @Max(5)
-    private Integer score;
-
-    private String comment;
-
-    public String getPaymentId() {
-        return paymentId;
-    }
-
-    public void setPaymentId(String paymentId) {
-        this.paymentId = paymentId;
-    }
-
-    public String getJobId() {
-        return jobId;
-    }
-
-    public void setJobId(String jobId) {
-        this.jobId = jobId;
-    }
-
-    public Long getClientId() {
-        return clientId;
-    }
-
-    public void setClientId(Long clientId) {
-        this.clientId = clientId;
-    }
-
-    public Long getExpertId() {
-        return expertId;
-    }
-
-    public void setExpertId(Long expertId) {
-        this.expertId = expertId;
-    }
-
-    public Integer getScore() {
-        return score;
-    }
-
-    public void setScore(Integer score) {
-        this.score = score;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
+ @NotNull private UUID paymentId;
+ @NotNull @Min(1) @Max(5) private Integer ratingStar;
+ private String reviewComment;
+ @Min(1) @Max(5) private Integer deliveryQuality;
+ @Min(1) @Max(5) private Integer communicationQuality;
+ @Min(1) @Max(5) private Integer deadlineSatisfaction;
+ private Boolean wouldHireAgain;
+ public UUID getPaymentId(){return paymentId;} public void setPaymentId(UUID v){paymentId=v;}
+ public Integer getRatingStar(){return ratingStar;} public void setRatingStar(Integer v){ratingStar=v;}
+ public String getReviewComment(){return reviewComment;} public void setReviewComment(String v){reviewComment=v;}
+ public Integer getDeliveryQuality(){return deliveryQuality;} public void setDeliveryQuality(Integer v){deliveryQuality=v;}
+ public Integer getCommunicationQuality(){return communicationQuality;} public void setCommunicationQuality(Integer v){communicationQuality=v;}
+ public Integer getDeadlineSatisfaction(){return deadlineSatisfaction;} public void setDeadlineSatisfaction(Integer v){deadlineSatisfaction=v;}
+ public Boolean getWouldHireAgain(){return wouldHireAgain;} public void setWouldHireAgain(Boolean v){wouldHireAgain=v;}
 }

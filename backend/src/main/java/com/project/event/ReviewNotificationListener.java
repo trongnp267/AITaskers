@@ -23,7 +23,7 @@ public class ReviewNotificationListener {
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void onReviewCreated(ReviewCreatedEvent event) {
         NotificationDTO notification = new NotificationDTO();
-        notification.setUserId(event.expertId());
+        notification.setUserId(event.expertAccountId());
         notification.setTitle("Ban co review moi");
         notification.setMessage("Ban vua nhan duoc review " + event.score() + " sao tu client.");
         notification.setType(NotificationType.RATING_RECEIVED);

@@ -3,13 +3,15 @@ package com.project.service;
 import com.project.dto.NotificationDTO;
 import com.project.exception.BaseException;
 import com.project.exception.NotificationException;
+import com.project.exception.EmailException;
 import com.project.model.Notification;
 import com.project.model.NotificationType;
-import com.project.model.User;
+import com.project.model.Account;
 import com.project.repository.INotificationRepository;
 import com.project.util.service.EmailService;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -33,11 +35,7 @@ public class NotificationService implements INotificationService {
                 throw new NotificationException("Notification data is required");
             }
 
-            User user = userService.findEntity(notificationDTO.getUserId());
-            if (Boolean.FALSE.equals(user.getSubscribed())) {
-                throw new NotificationException("User is not subscribed");
-            }
-
+            Account user = userService.findEntity(notificationDTO.getUserId());
             if (notificationDTO.getType() == null) {
                 notificationDTO.setType(NotificationType.SYSTEM_ANNOUNCEMENT);
             }
@@ -48,12 +46,19 @@ public class NotificationService implements INotificationService {
             notification.setRead(false);
             notification.setReadAt(null);
 
-            if (hasText(user.getEmail())) {
-                emailService.send(user.getEmail(), notificationDTO.getTitle(), notificationDTO.getMessage());
-            }
+            notification.setSent(false);
+            Notification saved = notificationRepository.save(notification);
 
-            notification.setSent(true);
-            return toDTO(notificationRepository.save(notification));
+            if (Boolean.TRUE.equals(user.getSubscribed()) && hasText(user.getEmail())) {
+                try {
+                    emailService.send(user.getEmail(), notificationDTO.getTitle(), notificationDTO.getMessage());
+                    saved.setSent(true);
+                    saved = notificationRepository.save(saved);
+                } catch (EmailException exception) {
+                    // In-app notification is already persisted. Email can be retried separately.
+                }
+            }
+            return toDTO(saved);
         } catch (BaseException exception) {
             throw exception;
         } catch (Exception exception) {
@@ -62,11 +67,9 @@ public class NotificationService implements INotificationService {
     }
 
     @Override
-    public List<NotificationDTO> findByUser(Long userId) {
+    public List<NotificationDTO> findByUser(UUID userId) {
         try {
-            if (userId == null || userId <= 0) {
-                throw new NotificationException("User id must be greater than 0");
-            }
+            if (userId == null) throw new NotificationException("User id is required");
 
             return notificationRepository.findByUserIdOrderByCreatedAtDesc(userId).stream()
                     .map(this::toDTO)
@@ -79,13 +82,14 @@ public class NotificationService implements INotificationService {
     }
 
     @Override
-    public NotificationDTO findById(Long notificationId) {
+    public NotificationDTO findById(Long notificationId, UUID userId) {
         try {
             if (notificationId == null || notificationId <= 0) {
                 throw new NotificationException("Notification id must be greater than 0");
             }
+            if (userId == null) throw new NotificationException("User id is required");
 
-            Notification notification = notificationRepository.findById(notificationId)
+            Notification notification = notificationRepository.findByIdAndUserId(notificationId, userId)
                     .orElseThrow(() -> new NotificationException("Notification not found: " + notificationId));
             return toDTO(notification);
         } catch (BaseException exception) {
@@ -96,11 +100,9 @@ public class NotificationService implements INotificationService {
     }
 
     @Override
-    public List<NotificationDTO> findUnreadByUser(Long userId) {
+    public List<NotificationDTO> findUnreadByUser(UUID userId) {
         try {
-            if (userId == null || userId <= 0) {
-                throw new NotificationException("User id must be greater than 0");
-            }
+            if (userId == null) throw new NotificationException("User id is required");
 
             return notificationRepository.findByUserIdAndReadFalseOrderByCreatedAtDesc(userId).stream()
                     .map(this::toDTO)
@@ -113,11 +115,9 @@ public class NotificationService implements INotificationService {
     }
 
     @Override
-    public List<NotificationDTO> findByUserAndType(Long userId, NotificationType type) {
+    public List<NotificationDTO> findByUserAndType(UUID userId, NotificationType type) {
         try {
-            if (userId == null || userId <= 0) {
-                throw new NotificationException("User id must be greater than 0");
-            }
+            if (userId == null) throw new NotificationException("User id is required");
             if (type == null) {
                 throw new NotificationException("Notification type is required");
             }
@@ -133,11 +133,9 @@ public class NotificationService implements INotificationService {
     }
 
     @Override
-    public List<NotificationDTO> findByUserAndReferenceType(Long userId, String referenceType) {
+    public List<NotificationDTO> findByUserAndReferenceType(UUID userId, String referenceType) {
         try {
-            if (userId == null || userId <= 0) {
-                throw new NotificationException("User id must be greater than 0");
-            }
+            if (userId == null) throw new NotificationException("User id is required");
             if (!hasText(referenceType)) {
                 throw new NotificationException("Reference type is required");
             }
@@ -153,11 +151,9 @@ public class NotificationService implements INotificationService {
     }
 
     @Override
-    public long countUnreadByUser(Long userId) {
+    public long countUnreadByUser(UUID userId) {
         try {
-            if (userId == null || userId <= 0) {
-                throw new NotificationException("User id must be greater than 0");
-            }
+            if (userId == null) throw new NotificationException("User id is required");
 
             return notificationRepository.countByUserIdAndReadFalse(userId);
         } catch (BaseException exception) {
@@ -168,13 +164,14 @@ public class NotificationService implements INotificationService {
     }
 
     @Override
-    public NotificationDTO markAsRead(Long notificationId) {
+    public NotificationDTO markAsRead(Long notificationId, UUID userId) {
         try {
             if (notificationId == null || notificationId <= 0) {
                 throw new NotificationException("Notification id must be greater than 0");
             }
+            if (userId == null) throw new NotificationException("User id is required");
 
-            Notification notification = notificationRepository.findById(notificationId)
+            Notification notification = notificationRepository.findByIdAndUserId(notificationId, userId)
                     .orElseThrow(() -> new NotificationException("Notification not found: " + notificationId));
             notification.setRead(true);
             notification.setReadAt(LocalDateTime.now());
@@ -187,11 +184,9 @@ public class NotificationService implements INotificationService {
     }
 
     @Override
-    public List<NotificationDTO> markAllAsRead(Long userId) {
+    public List<NotificationDTO> markAllAsRead(UUID userId) {
         try {
-            if (userId == null || userId <= 0) {
-                throw new NotificationException("User id must be greater than 0");
-            }
+            if (userId == null) throw new NotificationException("User id is required");
 
             List<Notification> notifications = notificationRepository.findByUserIdAndReadFalseOrderByCreatedAtDesc(userId);
             LocalDateTime now = LocalDateTime.now();
@@ -210,16 +205,15 @@ public class NotificationService implements INotificationService {
     }
 
     @Override
-    public void delete(Long notificationId) {
+    public void delete(Long notificationId, UUID userId) {
         try {
             if (notificationId == null || notificationId <= 0) {
                 throw new NotificationException("Notification id must be greater than 0");
             }
-            if (!notificationRepository.existsById(notificationId)) {
-                throw new NotificationException("Notification not found: " + notificationId);
-            }
-
-            notificationRepository.deleteById(notificationId);
+            if (userId == null) throw new NotificationException("User id is required");
+            Notification notification = notificationRepository.findByIdAndUserId(notificationId, userId)
+                    .orElseThrow(() -> new NotificationException("Notification not found: " + notificationId));
+            notificationRepository.delete(notification);
         } catch (BaseException exception) {
             throw exception;
         } catch (Exception exception) {

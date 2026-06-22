@@ -3,9 +3,10 @@ package com.project.service;
 import com.project.dto.UserDTO;
 import com.project.exception.BaseException;
 import com.project.exception.UserNotFoundException;
-import com.project.model.User;
+import com.project.model.Account;
 import com.project.repository.IUserRepository;
 import java.util.List;
+import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,7 +25,7 @@ public class UserService implements IUserService {
                 throw new IllegalArgumentException("User data is required");
             }
 
-            User user = toEntity(userDTO);
+            Account user = toEntity(userDTO);
             user.setId(null);
             return toDTO(userRepository.save(user));
         } catch (BaseException exception) {
@@ -44,9 +45,9 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserDTO findById(Long id) {
+    public UserDTO findById(UUID id) {
         try {
-            if (id == null || id <= 0) {
+            if (id == null) {
                 throw new UserNotFoundException(id);
             }
 
@@ -59,19 +60,20 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserDTO update(Long id, UserDTO userDTO) {
+    public UserDTO update(UUID id, UserDTO userDTO) {
         try {
-            if (id == null || id <= 0) {
+            if (id == null) {
                 throw new UserNotFoundException(id);
             }
             if (userDTO == null) {
                 throw new IllegalArgumentException("User data is required");
             }
 
-            User user = findEntity(id);
+            Account user = findEntity(id);
             user.setName(userDTO.getName());
             user.setEmail(userDTO.getEmail());
             user.setSubscribed(userDTO.getSubscribed());
+            user.setUserRole(userDTO.getUserRole());
             return toDTO(userRepository.save(user));
         } catch (BaseException exception) {
             throw exception;
@@ -80,14 +82,14 @@ public class UserService implements IUserService {
         }
     }
 
-    User findEntity(Long id) {
-        if (id == null || id <= 0) {
+    Account findEntity(UUID id) {
+        if (id == null) {
             throw new UserNotFoundException(id);
         }
         return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
     }
 
-    UserDTO toDTO(User user) {
+    UserDTO toDTO(Account user) {
         if (user == null) {
             throw new IllegalArgumentException("User is required");
         }
@@ -97,19 +99,21 @@ public class UserService implements IUserService {
         dto.setName(user.getName());
         dto.setEmail(user.getEmail());
         dto.setSubscribed(user.getSubscribed());
+        dto.setUserRole(user.getUserRole());
         return dto;
     }
 
-    private User toEntity(UserDTO dto) {
+    private Account toEntity(UserDTO dto) {
         if (dto == null) {
             throw new IllegalArgumentException("User data is required");
         }
 
-        User user = new User();
+        Account user = new Account();
         user.setId(dto.getId());
         user.setName(dto.getName());
         user.setEmail(dto.getEmail());
         user.setSubscribed(dto.getSubscribed());
+        user.setUserRole(dto.getUserRole());
         return user;
     }
 }

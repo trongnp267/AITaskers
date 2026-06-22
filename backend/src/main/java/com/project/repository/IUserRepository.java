@@ -1,10 +1,11 @@
 package com.project.repository;
 
-import com.project.model.User;
+import com.project.model.Account;
+import java.util.UUID;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface IUserRepository extends JpaRepository<User, Long> {
+public interface IUserRepository extends JpaRepository<Account, UUID> {
 
-    Optional<User> findByEmail(String email);
+    Optional<Account> findByEmail(String email);
 }
