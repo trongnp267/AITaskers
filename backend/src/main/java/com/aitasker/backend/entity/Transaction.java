@@ -5,9 +5,12 @@ import java.math.BigDecimal;
 
 @Entity
 @Data
+@Table(name = "transactions")
 public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "proposal_id")
+private Long proposalId;
     private Long id;
     private Long walletId;
     private BigDecimal amount;

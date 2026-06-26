@@ -7,6 +7,8 @@ import lombok.Data;
 public class Proposal {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "proposal_id")
+private Long proposalId;
     private Long id;
     
     private Long jobId;

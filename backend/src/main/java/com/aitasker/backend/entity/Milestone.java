@@ -12,6 +12,8 @@ public class Milestone {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "proposal_id")
+private Long proposalId;
     private Long id;
 
     // Các cột dữ liệu dự đoán
@@ -21,4 +23,5 @@ public class Milestone {
     private BigDecimal amount;
     private String status;
     private LocalDateTime dueDate;
+    private Long projectId;
 }

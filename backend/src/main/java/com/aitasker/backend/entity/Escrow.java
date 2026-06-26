@@ -11,6 +11,8 @@ public class Escrow {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    
+
     private Long id;
 
     // Các cột dữ liệu dự đoán (có thể phải thêm nếu Service gọi)
@@ -18,4 +20,5 @@ public class Escrow {
     private Long proposalId;
     private BigDecimal amount;
     private String status;
+    private Long projectId;
 }
