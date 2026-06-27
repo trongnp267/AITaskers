@@ -9,7 +9,7 @@ public class Wallet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "proposal_id")
-private Long proposalId;
+
     private Long id;
     private Long userId;
     private BigDecimal balance;
