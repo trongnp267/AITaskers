@@ -13,8 +13,11 @@ import com.example.demo.dto.JobRequest;
 import com.example.demo.entity.Job;
 import com.example.demo.service.JobService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @RestController
 @RequestMapping("/jobs")
+@SecurityRequirement(name = "bearerAuth")
 public class JobController {
 
     private final JobService jobService;
@@ -37,4 +40,4 @@ public class JobController {
     public Job getJobById(@PathVariable Long id) {
         return jobService.getJobById(id);
     }
-}   
+}
