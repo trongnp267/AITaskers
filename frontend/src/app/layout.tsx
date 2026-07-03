@@ -18,9 +18,7 @@ export default function RootLayout({
       lang="vi"
     >
       <body>
-        <Header />
         {children}
-        <Footer />
       </body>
     </html>
   );
