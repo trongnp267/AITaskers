@@ -1,0 +1,128 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --breakpoint-sm: 576px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 992px;
+  --breakpoint-xl: 1200px;
+  --breakpoint-2xl: 1200px;
+}
+
+* {
+  font-family: "Lexend", sans-serif;
+}
+
+/* Contain */
+.contain {
+  width: 1184px;
+  margin: 0 auto;
+}
+
+@media (max-width: 1200px) {
+  .contain {
+    width: 960px;
+  }
+}
+
+@media (max-width: 992px) {
+  .contain {
+    width: 720px;
+  }
+}
+
+@media (max-width: 768px) {
+  .contain {
+    width: 540px;
+  }
+}
+
+@media (max-width: 576px) {
+  .contain {
+    width: 100%;
+    padding: 0 16px;
+  }
+}
+/* End Container */
+
+/* Menu */
+.menu > ul {
+  display: flex;
+  gap: 30px;
+}
+
+.menu > ul > li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+}
+
+.menu > ul > li > a {
+  font-weight: 600;
+  font-size: 16px;
+  color: white;
+}
+
+.menu > ul > li > svg {
+  width: 14px;
+  color: white;
+}
+
+.menu > ul > li ul {
+  display: flex;
+  flex-direction: column;
+  border-radius: 4px;
+  position: absolute;
+  width: 280px;
+  background-color: #000065;
+  display: none;
+}
+
+.menu > ul > li > ul {
+  width: 280px;
+  top: 100%;
+}
+
+.menu > ul > li:hover > ul {
+  display: flex;
+}
+
+.menu > ul > li > ul li {
+  padding: 10px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+.menu > ul > li > ul li:hover {
+  background-color: #000096;
+}
+
+.menu > ul > li > ul li a {
+  font-weight: 600;
+  font-size: 16px;
+  color: white;
+}
+
+.menu > ul > li > ul li svg {
+  color: white;
+  width: 10px;
+}
+
+.menu > ul > li > ul > li > ul {
+  top: 0;
+  left: 100%;
+}
+
+.menu > ul > li > ul > li:hover > ul {
+  display: flex;
+}
+
+@media (max-width: 992px) {
+  .menu {
+    display: none;
+  }
+}
+/* End Menu */
