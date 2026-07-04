@@ -1,4 +1,4 @@
-package com.example.demo.dto;
+package com.aitasker.backend.dto;
 import lombok.Data;
 
 public class RegisterRequest {

@@ -1,4 +1,4 @@
-package com.example.demo.service;
+package com.aitasker.backend.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -6,14 +6,14 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.example.demo.dto.JobRequest;
-import com.example.demo.entity.ClientProfile;
-import com.example.demo.entity.Job;
-import com.example.demo.entity.JobSkill;
-import com.example.demo.entity.Skill;
-import com.example.demo.repository.ClientProfileRepository;
-import com.example.demo.repository.JobRepository;
-import com.example.demo.repository.SkillRepository;
+import com.aitasker.backend.dto.JobRequest;
+import com.aitasker.backend.entity.ClientProfile;
+import com.aitasker.backend.entity.Job;
+import com.aitasker.backend.entity.JobSkill;
+import com.aitasker.backend.entity.Skill;
+import com.aitasker.backend.repository.ClientProfileRepository;
+import com.aitasker.backend.repository.JobRepository;
+import com.aitasker.backend.repository.SkillRepository;
 
 @Service
 public class JobService {

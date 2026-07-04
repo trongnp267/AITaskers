@@ -1,4 +1,4 @@
-package com.example.demo.service;
+package com.aitasker.backend.service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -6,13 +6,13 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.example.demo.dto.ProposalRequest;
-import com.example.demo.entity.ExpertProfile;
-import com.example.demo.entity.Job;
-import com.example.demo.entity.Proposal;
-import com.example.demo.repository.ExpertProfileRepository;
-import com.example.demo.repository.JobRepository;
-import com.example.demo.repository.ProposalRepository;
+import com.aitasker.backend.dto.ProposalRequest;
+import com.aitasker.backend.entity.ExpertProfile;
+import com.aitasker.backend.entity.Job;
+import com.aitasker.backend.entity.Proposal;
+import com.aitasker.backend.repository.ExpertProfileRepository;
+import com.aitasker.backend.repository.JobRepository;
+import com.aitasker.backend.repository.ProposalRepository;
 
 @Service
 public class ProposalService {

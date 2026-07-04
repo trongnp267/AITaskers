@@ -1,4 +1,4 @@
-package com.example.demo.entity;
+package com.aitasker.backend.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;

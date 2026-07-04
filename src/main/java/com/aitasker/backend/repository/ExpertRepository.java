@@ -1,6 +1,6 @@
-package com.example.demo.repository;
+package com.aitasker.backend.repository;
 
-import com.example.demo.entity.ExpertProfile;
+import com.aitasker.backend.entity.ExpertProfile;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;

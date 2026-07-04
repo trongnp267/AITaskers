@@ -1,7 +1,7 @@
-package com.example.demo.controller;
+package com.aitasker.backend.controller;
 
-import com.example.demo.dto.ExpertResult;
-import com.example.demo.service.MatchingAIService;
+import com.aitasker.backend.dto.ExpertResult;
+import com.aitasker.backend.service.MatchingAIService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

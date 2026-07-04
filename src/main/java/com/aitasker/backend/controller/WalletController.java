@@ -1,7 +1,7 @@
-package com.example.demo.controller;
+package com.aitasker.backend.controller;
 
-import com.example.demo.entity.Wallet;
-import com.example.demo.repository.WalletRepository;
+import com.aitasker.backend.entity.Wallet;
+import com.aitasker.backend.repository.WalletRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;

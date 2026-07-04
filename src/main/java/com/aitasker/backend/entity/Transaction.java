@@ -1,4 +1,4 @@
-package com.example.demo.entity;
+package com.aitasker.backend.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

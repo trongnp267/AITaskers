@@ -1,8 +1,8 @@
-package com.example.demo.repository;
+package com.aitasker.backend.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.example.demo.entity.Account;
+import com.aitasker.backend.entity.Account;
 
 public interface AccountRepository extends JpaRepository<Account, Long> {
 }

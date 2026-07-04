@@ -1,6 +1,6 @@
-package com.example.demo.security;
+package com.aitasker.backend.security;
 
-import com.example.demo.service.JwtService;
+import com.aitasker.backend.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

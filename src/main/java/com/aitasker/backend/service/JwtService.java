@@ -1,4 +1,4 @@
-package com.example.demo.service;
+package com.aitasker.backend.service;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.entity.User;
+import com.aitasker.backend.entity.User;
 
 import javax.crypto.SecretKey;
 import java.time.Instant;

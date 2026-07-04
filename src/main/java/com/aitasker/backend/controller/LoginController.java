@@ -1,9 +1,9 @@
-package com.example.demo.controller;
+package com.aitasker.backend.controller;
 
-import com.example.demo.entity.User;
-import com.example.demo.repository.UserRepository;
-import com.example.demo.service.JwtService;
-import com.example.demo.service.UserService;
+import com.aitasker.backend.entity.User;
+import com.aitasker.backend.repository.UserRepository;
+import com.aitasker.backend.service.JwtService;
+import com.aitasker.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

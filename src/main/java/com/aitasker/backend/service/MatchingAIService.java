@@ -1,15 +1,15 @@
-package com.example.demo.service;
+package com.aitasker.backend.service;
 
-import com.example.demo.dto.ExpertResult;
-import com.example.demo.entity.ExpertProfile;
-import com.example.demo.repository.ExpertRepository;
+import com.aitasker.backend.dto.ExpertResult;
+import com.aitasker.backend.entity.ExpertProfile;
+import com.aitasker.backend.repository.ExpertRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import com.example.demo.dto.*;
+import com.aitasker.backend.dto.*;
 import java.util.*;
 
 @Service

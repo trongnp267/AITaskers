@@ -1,9 +1,8 @@
-package com.example.demo.service;
+package com.aitasker.backend.service;
 
-import com.aitasker.backend.entity.Wallet;
-import com.example.demo.dto.RegisterRequest;
-import com.example.demo.entity.*;
-import com.example.demo.repository.*;
+import com.aitasker.backend.dto.RegisterRequest;
+import com.aitasker.backend.entity.*;
+import com.aitasker.backend.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,6 +14,8 @@ import java.util.Optional;
 
 @Service
 public class UserService {
+    @Autowired
+private WalletRepository walletRepository;
 
     @Autowired private UserRepository userRepository;
     @Autowired private ClientProfileRepository clientProfileRepository;

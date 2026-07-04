@@ -1,4 +1,4 @@
-package com.example.demo.entity;
+package com.aitasker.backend.entity;
 
 import java.time.LocalDateTime;
 import jakarta.persistence.*;

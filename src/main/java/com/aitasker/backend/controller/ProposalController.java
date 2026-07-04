@@ -1,4 +1,4 @@
-package com.example.demo.controller;
+package com.aitasker.backend.controller;
 
 import java.util.List;
 import java.util.Map;
@@ -11,9 +11,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.dto.ProposalRequest;
-import com.example.demo.entity.Proposal;
-import com.example.demo.service.ProposalService;
+import com.aitasker.backend.dto.ProposalRequest;
+import com.aitasker.backend.entity.Proposal;
+import com.aitasker.backend.service.ProposalService;
+import org.springframework.http.ResponseEntity;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 

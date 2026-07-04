@@ -1,11 +1,11 @@
-package com.example.demo.service;
+package com.aitasker.backend.service;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.repository.UserRepository;
+import com.aitasker.backend.repository.UserRepository;
 
 @Service
 public class JpaUserDetailsService implements UserDetailsService {

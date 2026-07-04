@@ -1,4 +1,4 @@
-package com.example.demo.security;
+package com.aitasker.backend.security;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
