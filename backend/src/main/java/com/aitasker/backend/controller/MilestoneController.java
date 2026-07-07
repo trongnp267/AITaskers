@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/milestones")
+@RequestMapping("/api/milestones")// Test day code
 @CrossOrigin("*") 
 @RequiredArgsConstructor
 public class MilestoneController {
