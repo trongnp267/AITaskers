@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Nền tảng AITasker - Test Giao Dịch</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 50px; background-color: #f4f7f6; }
+        .container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); max-width: 400px; margin: 0 auto; }
+        h2 { text-align: center; color: #333; }
+        input, button { display: block; width: 100%; margin: 15px 0; padding: 12px; box-sizing: border-box; border-radius: 5px; border: 1px solid #ccc; }
+        button { background-color: #007bff; color: white; border: none; cursor: pointer; font-weight: bold; font-size: 16px; }
+        button:hover { background-color: #0056b3; }
+        #ketqua { text-align: center; font-weight: bold; color: green; margin-top: 15px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Nạp Tiền Vào Ví Escrow</h2>
+        <input type="number" id="walletId" placeholder="Nhập ID của ví (VD: 1)">
+        <input type="number" id="amount" placeholder="Nhập số tiền muốn nạp ($)">
+        
+        <button onclick="thucHienNapTien()">Xác nhận Nạp Tiền</button>
+        
+        <p id="ketqua"></p> 
+    </div>
+
+    <script>
+        function thucHienNapTien() {
+            // Lấy dữ liệu người dùng nhập
+            var id = document.getElementById('walletId').value;
+            var tien = document.getElementById('amount').value;
+            var ketQuaText = document.getElementById('ketqua');
+
+            if(!id || !tien) {
+                ketQuaText.style.color = 'red';
+                ketQuaText.innerText = "Vui lòng nhập đủ thông tin!";
+                return;
+            }
+
+            ketQuaText.style.color = 'blue';
+            ketQuaText.innerText = "Đang xử lý...";
+
+            // Gọi xuống hàm @PostMapping("/deposit") ở file Java của bạn
+            var url = '/api/wallet/deposit?walletId=' + id + '&amount=' + tien;
+
+            fetch(url, { method: 'POST' })
+                .then(response => response.text())
+                .then(data => {
+                    // Hiển thị thông báo thành công hoặc báo lỗi từ file Java
+                    if(data.includes("Lỗi") || data.includes("Không tìm thấy")) {
+                        ketQuaText.style.color = 'red';
+                    } else {
+                        ketQuaText.style.color = 'green';
+                    }
+                    ketQuaText.innerText = data;
+                })
+                .catch(error => {
+                    ketQuaText.style.color = 'red';
+                    ketQuaText.innerText = "Lỗi mất kết nối với Server!";
+                });
+        }
+    </script>
+</body>
+</html>
