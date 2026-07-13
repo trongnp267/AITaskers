@@ -17,7 +17,7 @@ public class RegisterController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
         String result = userService.registerUser(request);
-        
+
         if (result.contains("Success")) {
             return ResponseEntity.ok(Map.of("status", "success", "message", result));
         } else {

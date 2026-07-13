@@ -14,8 +14,9 @@ import java.util.Optional;
 
 @Service
 public class UserService {
+
     @Autowired
-private WalletRepository walletRepository;
+    private WalletRepository walletRepository;
 
     @Autowired private UserRepository userRepository;
     @Autowired private ClientProfileRepository clientProfileRepository;
@@ -33,40 +34,46 @@ private WalletRepository walletRepository;
             return "Passwords do not match!";
         }
 
+        if (request.getRole() == null || request.getRole().isBlank()) {
+            // TRUOC DAY: request.getRole().toUpperCase() duoc goi truc tiep, neu
+            // client quen gui "role" se nem NullPointerException chu khong phai
+            // loi nghiep vu ro rang.
+            return "Role is required!";
+        }
+
         if (userRepository.findByUsername(request.getUsername()).isPresent()) {
             return "Account already exists!";
         }
 
         String hashedPassword = passwordEncoder.encode(request.getPassword());
-        
+
         User newUser = new User();
         newUser.setUsername(request.getUsername());
         newUser.setPassword(hashedPassword);
         newUser.setRole(request.getRole().toUpperCase());
         User savedUser = userRepository.save(newUser);
 
-Wallet wallet = new Wallet();
-wallet.setUser(savedUser);
-wallet.setBalance(BigDecimal.ZERO);
-walletRepository.save(wallet);
+        Wallet wallet = new Wallet();
+        wallet.setUser(savedUser);
+        wallet.setBalance(BigDecimal.ZERO);
+        walletRepository.save(wallet);
 
-      if ("CLIENT".equals(savedUser.getRole())) {
-    ClientProfile client = new ClientProfile();
-    client.setCompanyName(request.getCompanyName());
-    client.setDescription(request.getDescription());
-    client.setUser(savedUser); // Đã trỏ thẳng về User chuẩn xác
-    client.setCreatedAt(LocalDateTime.now());
-    clientProfileRepository.save(client);
-} 
-else if ("EXPERT".equals(savedUser.getRole())) {
-    ExpertProfile expert = new ExpertProfile();
-    expert.setDescription(request.getDescription());
-    expert.setExperienceYears(0);
-    expert.setRating(BigDecimal.valueOf(5.0));
-    expert.setCompletedJobs(0);
-    expert.setUser(savedUser); // Đã trỏ thẳng về User chuẩn xác
-    expertProfileRepository.save(expert);
-}
+        if ("CLIENT".equals(savedUser.getRole())) {
+            ClientProfile client = new ClientProfile();
+            client.setCompanyName(request.getCompanyName());
+            client.setDescription(request.getDescription());
+            client.setUser(savedUser);
+            client.setCreatedAt(LocalDateTime.now());
+            clientProfileRepository.save(client);
+        } else if ("EXPERT".equals(savedUser.getRole())) {
+            ExpertProfile expert = new ExpertProfile();
+            expert.setDescription(request.getDescription());
+            expert.setExperienceYears(0);
+            expert.setRating(BigDecimal.valueOf(5.0));
+            expert.setCompletedJobs(0);
+            expert.setUser(savedUser);
+            expertProfileRepository.save(expert);
+        }
 
         return "Registration Success!";
     }

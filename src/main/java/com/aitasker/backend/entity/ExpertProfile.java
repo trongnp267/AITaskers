@@ -13,7 +13,7 @@ public class ExpertProfile {
     private Long expertId;
 
     @OneToOne
-    @JoinColumn(name = "user_id", nullable = false, unique = true) // Thay thế account_id bằng user_id
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
 
     @Column(name = "description")

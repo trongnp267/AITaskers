@@ -30,22 +30,42 @@ public class ProposalController {
         this.proposalService = proposalService;
     }
 
-@PostMapping("/{proposalId}/accept")
-public ResponseEntity<?> acceptProposal(@PathVariable Long proposalId) {
-    try {
-        Proposal accepted = proposalService.acceptProposal(proposalId);
-        return ResponseEntity.ok(Map.of(
-            "status", "success",
-            "message", "Chấp nhận báo giá thành công. Tiền đã được chuyển vào quỹ đóng băng bảo mật.",
-            "data", accepted
-        ));
-    } catch (Exception e) {
-        return ResponseEntity.badRequest().body(Map.of(
-            "status", "error",
-            "message", e.getMessage()
-        ));
+    // TRUOC DAY: khong co endpoint nao goi proposalService.createProposal(),
+    // nen mac du DTO ProposalRequest va logic tao proposal da co san, Expert
+    // khong co cach nao thuc su gui bao gia qua API.
+    @PostMapping
+    public ResponseEntity<?> createProposal(@RequestBody ProposalRequest request) {
+        try {
+            Proposal created = proposalService.createProposal(request);
+            return ResponseEntity.ok(Map.of(
+                "status", "success",
+                "message", "Gui bao gia thanh cong.",
+                "data", created
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of(
+                "status", "error",
+                "message", e.getMessage()
+            ));
+        }
     }
-}
+
+    @PostMapping("/{proposalId}/accept")
+    public ResponseEntity<?> acceptProposal(@PathVariable Long proposalId) {
+        try {
+            Proposal accepted = proposalService.acceptProposal(proposalId);
+            return ResponseEntity.ok(Map.of(
+                "status", "success",
+                "message", "Chấp nhận báo giá thành công. Tiền đã được chuyển vào quỹ đóng băng bảo mật.",
+                "data", accepted
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of(
+                "status", "error",
+                "message", e.getMessage()
+            ));
+        }
+    }
 
     @GetMapping
     public List<Proposal> getAllProposals() {

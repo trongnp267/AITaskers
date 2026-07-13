@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface MilestoneRepository extends JpaRepository<Milestone, Long> {
-   
+
     List<Milestone> findByProjectId(Long projectId);
 }

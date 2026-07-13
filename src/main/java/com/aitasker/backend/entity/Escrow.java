@@ -28,8 +28,9 @@ public class Escrow {
     @Column(nullable = false)
     private BigDecimal amount;
 
+    // HELD, RELEASED, REFUNDED
     @Column(nullable = false)
-    private String escrowStatus; // HELD, RELEASED, REFUNDED
+    private String escrowStatus;
 
     private LocalDateTime createdAt = LocalDateTime.now();
     private LocalDateTime updatedAt = LocalDateTime.now();

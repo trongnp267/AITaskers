@@ -1,7 +1,6 @@
 package com.aitasker.backend.controller;
 
 import com.aitasker.backend.entity.User;
-import com.aitasker.backend.repository.UserRepository;
 import com.aitasker.backend.service.JwtService;
 import com.aitasker.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +19,6 @@ public class LoginController {
     @Autowired
     private JwtService jwtService;
 
-    @Autowired
-    private UserRepository userRepository;
-
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> loginData) {
         String username = loginData.get("username");
@@ -32,9 +28,9 @@ public class LoginController {
 
         if (userOpt.isPresent()) {
             User user = userOpt.get();
-            
+
             String token = jwtService.generateToken(user);
-            
+
             return ResponseEntity.ok(Map.of(
                 "status", "success",
                 "message", "Login Successful",
@@ -42,7 +38,7 @@ public class LoginController {
             ));
         } else {
             return ResponseEntity.status(401).body(Map.of(
-                "status", "error", 
+                "status", "error",
                 "message", "Invalid username or password"
             ));
         }

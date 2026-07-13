@@ -1,4 +1,5 @@
 package com.aitasker.backend.dto;
+
 import lombok.Data;
 
 @Data

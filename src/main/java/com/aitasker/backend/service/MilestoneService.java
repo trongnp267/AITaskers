@@ -1,10 +1,21 @@
 package com.aitasker.backend.service;
 
+import com.aitasker.backend.entity.Escrow;
+import com.aitasker.backend.entity.Job;
 import com.aitasker.backend.entity.Milestone;
+import com.aitasker.backend.entity.Transaction;
+import com.aitasker.backend.entity.Wallet;
+import com.aitasker.backend.repository.EscrowRepository;
+import com.aitasker.backend.repository.JobRepository;
 import com.aitasker.backend.repository.MilestoneRepository;
+import com.aitasker.backend.repository.TransactionRepository;
+import com.aitasker.backend.repository.WalletRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -12,19 +23,115 @@ import java.util.List;
 public class MilestoneService {
 
     private final MilestoneRepository milestoneRepository;
+    private final EscrowRepository escrowRepository;
+    private final WalletRepository walletRepository;
+    private final TransactionRepository transactionRepository;
+    private final JobRepository jobRepository;
 
-    
     public List<Milestone> getMilestonesByProjectId(Long projectId) {
         return milestoneRepository.findByProjectId(projectId);
     }
 
-    
     public Milestone submitMilestone(Long milestoneId) {
         Milestone milestone = milestoneRepository.findById(milestoneId)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy giai đoạn này!"));
-        
-        
+                .orElseThrow(() -> new RuntimeException("Khong tim thay giai doan nay!"));
+
         milestone.setStatus("WAITING_FOR_APPROVAL");
+        return milestoneRepository.save(milestone);
+    }
+
+    /**
+     * TRUOC DAY: chua co buoc "duyet" nao sau khi Expert submit deliverable
+     * (submitMilestone chi doi status sang WAITING_FOR_APPROVAL roi dung lai).
+     * Client khong co cach nao giai ngan tien tu Escrow sang vi Expert - du
+     * Transaction.java da chua san loai "ESCROW_RELEASE" nhung chua noi nao
+     * dung toi. Bo sung day du quy trinh duyet mo ta o Escrow/Transaction:
+     * 1. Milestone phai dang WAITING_FOR_APPROVAL.
+     * 2. Escrow cua Job phai dang HELD va con du tien >= amount cua milestone.
+     * 3. Chuyen amount tu Escrow sang vi Expert, ghi lai Transaction ESCROW_RELEASE.
+     * 4. Tru amount da giai ngan khoi Escrow; het tien thi Escrow -> RELEASED.
+     * 5. Milestone -> APPROVED; neu tat ca milestone cua Job da APPROVED thi
+     *    Job -> COMPLETED.
+     */
+    @Transactional
+    public Milestone approveMilestone(Long milestoneId) {
+        Milestone milestone = milestoneRepository.findById(milestoneId)
+                .orElseThrow(() -> new RuntimeException("Khong tim thay giai doan nay!"));
+
+        if (!"WAITING_FOR_APPROVAL".equalsIgnoreCase(milestone.getStatus())) {
+            throw new RuntimeException("Chi co the duyet giai doan dang o trang thai cho duyet");
+        }
+
+        Escrow escrow = escrowRepository.findByJobJobId(milestone.getProjectId())
+                .orElseThrow(() -> new RuntimeException("Khong tim thay quy ky quy (Escrow) cua cong viec nay"));
+
+        if (!"HELD".equalsIgnoreCase(escrow.getEscrowStatus())) {
+            throw new RuntimeException("Quy ky quy khong o trang thai HELD, khong the giai ngan");
+        }
+
+        BigDecimal amount = milestone.getAmount();
+        if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new RuntimeException("So tien giai doan khong hop le");
+        }
+
+        if (escrow.getAmount().compareTo(amount) < 0) {
+            throw new RuntimeException("So tien con lai trong quy ky quy khong du de giai ngan giai doan nay");
+        }
+
+        // 1. Chuyen tien tu Escrow sang vi Expert
+        Wallet expertWallet = walletRepository.findByUserId(escrow.getExpert().getUser().getId())
+                .orElseThrow(() -> new RuntimeException("Khong tim thay vi cua Expert"));
+
+        expertWallet.setBalance(expertWallet.getBalance().add(amount));
+        walletRepository.save(expertWallet);
+
+        Transaction releaseTx = new Transaction();
+        releaseTx.setWallet(expertWallet);
+        releaseTx.setAmount(amount);
+        releaseTx.setTransactionType("ESCROW_RELEASE");
+        transactionRepository.save(releaseTx);
+
+        // 2. Tru tien da giai ngan khoi Escrow
+        escrow.setAmount(escrow.getAmount().subtract(amount));
+        if (escrow.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
+            escrow.setEscrowStatus("RELEASED");
+        }
+        escrow.setUpdatedAt(LocalDateTime.now());
+        escrowRepository.save(escrow);
+
+        // 3. Danh dau Milestone da duoc duyet
+        milestone.setStatus("APPROVED");
+        milestoneRepository.save(milestone);
+
+        // 4. Neu tat ca milestone cua Job da APPROVED thi Job hoan thanh
+        List<Milestone> allMilestones = milestoneRepository.findByProjectId(milestone.getProjectId());
+        boolean allApproved = allMilestones.stream()
+                .allMatch(m -> "APPROVED".equalsIgnoreCase(m.getStatus()));
+
+        if (allApproved) {
+            Job job = jobRepository.findById(milestone.getProjectId())
+                    .orElseThrow(() -> new RuntimeException("Khong tim thay cong viec"));
+            job.setJobStatus("COMPLETED");
+            job.setUpdatedAt(LocalDateTime.now());
+            jobRepository.save(job);
+        }
+
+        return milestone;
+    }
+
+    /**
+     * Client tu choi san pham da nop: khong dong tien nao trong Escrow bi anh
+     * huong (van HELD), Milestone quay ve REJECTED de Expert nop lai.
+     */
+    public Milestone rejectMilestone(Long milestoneId) {
+        Milestone milestone = milestoneRepository.findById(milestoneId)
+                .orElseThrow(() -> new RuntimeException("Khong tim thay giai doan nay!"));
+
+        if (!"WAITING_FOR_APPROVAL".equalsIgnoreCase(milestone.getStatus())) {
+            throw new RuntimeException("Chi co the tu choi giai doan dang o trang thai cho duyet");
+        }
+
+        milestone.setStatus("REJECTED");
         return milestoneRepository.save(milestone);
     }
 }

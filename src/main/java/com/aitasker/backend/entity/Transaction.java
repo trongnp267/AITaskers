@@ -18,6 +18,9 @@ public class Transaction {
     private Wallet wallet;
 
     private BigDecimal amount;
-    private String transactionType; // DEPOSIT, ESCROW_HOLD, ESCROW_RELEASE
+
+    // DEPOSIT, ESCROW_HOLD, ESCROW_RELEASE
+    private String transactionType;
+
     private LocalDateTime timestamp = LocalDateTime.now();
 }

@@ -59,7 +59,7 @@ public class JobService {
             job.getJobSkills().add(jobSkill);
         }
 
-        job.setJobStatus("OPEN");   
+        job.setJobStatus("OPEN");
         job.setCreatedAt(LocalDateTime.now());
         job.setUpdatedAt(LocalDateTime.now());
 

@@ -6,18 +6,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
+@SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequestMapping("/api/escrow")
-public class LCKEscrowController {
+public class EscrowController {
 
     @Autowired
     private EscrowRepository escrowRepository;
 
+    // Luu y: trong luong nghiep vu binh thuong, Escrow duoc tao TU DONG khi
+    // ProposalService.acceptProposal() chay (xem ProposalService), khong can
+    // goi tay endpoint nay. Giu lai endpoint nay cho muc dich test/debug thu cong.
     @PostMapping("/create")
     public ResponseEntity<?> createEscrow(@RequestBody Escrow escrow) {
         try {
-            // Lưu thẳng cục dữ liệu từ trên Swagger đẩy xuống vào SQL
             Escrow savedEscrow = escrowRepository.save(escrow);
             return ResponseEntity.ok(savedEscrow);
         } catch (Exception e) {
