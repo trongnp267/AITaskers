@@ -11,6 +11,7 @@ public class JobRequest {
     private String description;
     private BigDecimal budgetMin;
     private BigDecimal budgetMax;
+    private Integer estimatedDurationDays;
     private LocalDate deadline;
     private String positionRequirement;
     private List<String> jobSkills;
@@ -43,6 +44,38 @@ public class JobRequest {
         this.description = description;
     }
 
+    public BigDecimal getBudgetMin() {
+        return budgetMin;
+    }
+
+    public void setBudgetMin(BigDecimal budgetMin) {
+        this.budgetMin = budgetMin;
+    }
+
+    public BigDecimal getBudgetMax() {
+        return budgetMax;
+    }
+
+    public void setBudgetMax(BigDecimal budgetMax) {
+        this.budgetMax = budgetMax;
+    }
+
+    public Integer getEstimatedDurationDays() {
+        return estimatedDurationDays;
+    }
+
+    public void setEstimatedDurationDays(Integer estimatedDurationDays) {
+        this.estimatedDurationDays = estimatedDurationDays;
+    }
+
+    public LocalDate getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(LocalDate deadline) {
+        this.deadline = deadline;
+    }
+
     public String getPositionRequirement() {
         return positionRequirement;
     }
@@ -65,29 +98,5 @@ public class JobRequest {
 
     public void setMinExperienceYears(Integer minExperienceYears) {
         this.minExperienceYears = minExperienceYears;
-    }
-
-    public BigDecimal getBudgetMin() {
-        return budgetMin;
-    }
-
-    public void setBudgetMin(BigDecimal budgetMin) {
-        this.budgetMin = budgetMin;
-    }
-
-    public BigDecimal getBudgetMax() {
-        return budgetMax;
-    }
-
-    public void setBudgetMax(BigDecimal budgetMax) {
-        this.budgetMax = budgetMax;
-    }
-
-    public LocalDate getDeadline() {
-        return deadline;
-    }
-
-    public void setDeadline(LocalDate deadline) {
-        this.deadline = deadline;
     }
 }

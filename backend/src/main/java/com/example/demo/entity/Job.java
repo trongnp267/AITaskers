@@ -19,7 +19,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
-
 @Entity
 @Table(name = "Job")
 public class Job {
@@ -54,6 +53,9 @@ public class Job {
 
     @Column(name = "budget_max", nullable = false)
     private BigDecimal budgetMax;
+
+    @Column(name = "estimated_duration_days")
+    private Integer estimatedDurationDays;
 
     @Column(name = "job_status", nullable = false)
     private String jobStatus;
@@ -148,6 +150,14 @@ public class Job {
 
     public void setBudgetMax(BigDecimal budgetMax) {
         this.budgetMax = budgetMax;
+    }
+
+    public Integer getEstimatedDurationDays() {
+        return estimatedDurationDays;
+    }
+
+    public void setEstimatedDurationDays(Integer estimatedDurationDays) {
+        this.estimatedDurationDays = estimatedDurationDays;
     }
 
     public String getJobStatus() {

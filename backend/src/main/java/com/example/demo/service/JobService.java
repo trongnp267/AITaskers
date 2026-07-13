@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -47,6 +48,7 @@ public class JobService {
         job.setMinExperienceYears(request.getMinExperienceYears());
         job.setBudgetMin(request.getBudgetMin());
         job.setBudgetMax(request.getBudgetMax());
+        job.setEstimatedDurationDays(request.getEstimatedDurationDays());
         job.setDeadline(request.getDeadline());
 
         for (String skillName : request.getJobSkills()) {
@@ -59,7 +61,7 @@ public class JobService {
             job.getJobSkills().add(jobSkill);
         }
 
-        job.setJobStatus("OPEN");   
+        job.setJobStatus("OPEN");
         job.setCreatedAt(LocalDateTime.now());
         job.setUpdatedAt(LocalDateTime.now());
 
@@ -84,8 +86,18 @@ public class JobService {
             throw new RuntimeException("Job title is required");
         }
 
+        String title = request.getTitle().trim();
+        if (title.length() < 10 || title.length() > 100) {
+            throw new RuntimeException("Job title must be between 10 and 100 characters");
+        }
+
         if (request.getDescription() == null || request.getDescription().trim().isEmpty()) {
             throw new RuntimeException("Job description is required");
+        }
+
+        String description = request.getDescription().trim();
+        if (description.length() < 50) {
+            throw new RuntimeException("Job description must be at least 50 characters");
         }
 
         if (request.getPositionRequirement() == null || request.getPositionRequirement().trim().isEmpty()) {
@@ -114,8 +126,21 @@ public class JobService {
             throw new RuntimeException("Budget min and budget max are required");
         }
 
+        if (request.getBudgetMin().compareTo(BigDecimal.ZERO) <= 0 ||
+                request.getBudgetMax().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new RuntimeException("Budget min and budget max must be greater than 0");
+        }
+
         if (request.getBudgetMin().compareTo(request.getBudgetMax()) > 0) {
             throw new RuntimeException("Budget min must be less than or equal to budget max");
+        }
+
+        if (request.getEstimatedDurationDays() == null) {
+            throw new RuntimeException("Estimated duration days is required");
+        }
+
+        if (request.getEstimatedDurationDays() <= 0 || request.getEstimatedDurationDays() > 365) {
+            throw new RuntimeException("Estimated duration days must be between 1 and 365");
         }
 
         if (request.getDeadline() == null) {

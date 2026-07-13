@@ -1,7 +1,9 @@
 package com.example.demo.controller;
 
 import java.util.List;
+import java.util.Map;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.example.demo.dto.ProposalRequest;
 import com.example.demo.entity.Proposal;
@@ -28,9 +31,19 @@ public class ProposalController {
         this.proposalService = proposalService;
     }
 
-    @PostMapping
-    public Proposal createProposal(@RequestBody ProposalRequest request) {
-        return proposalService.createProposal(request);
+   @PostMapping
+    public ResponseEntity<?> createProposal(@RequestBody ProposalRequest request) {
+        try {
+            Proposal proposal = proposalService.createProposal(request);
+            return ResponseEntity.ok(proposal);
+        } catch (ResponseStatusException e) {
+            return ResponseEntity
+                    .status(e.getStatusCode())
+                    .body(Map.of(
+                            "status", "error",
+                            "message", e.getReason()
+                    ));
+        }
     }
 
     @GetMapping
