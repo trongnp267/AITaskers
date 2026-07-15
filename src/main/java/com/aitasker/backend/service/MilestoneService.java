@@ -1,5 +1,6 @@
 package com.aitasker.backend.service;
 
+import com.aitasker.backend.dto.MilestoneRequest;
 import com.aitasker.backend.entity.Escrow;
 import com.aitasker.backend.entity.Job;
 import com.aitasker.backend.entity.Milestone;
@@ -29,7 +30,73 @@ public class MilestoneService {
     private final JobRepository jobRepository;
 
     public List<Milestone> getMilestonesByProjectId(Long projectId) {
-        return milestoneRepository.findByProjectId(projectId);
+        return milestoneRepository.findByProject_JobId(projectId);
+    }
+
+    /**
+     * PHAN 6 (Manage Project): TRUOC DAY khong co endpoint/ham nao tao milestone
+     * (chi co list + submit), nen thuc te khong co cach nao them giai doan cho
+     * mot Job qua API. Bo sung tao milestone gan voi mot Job co that (khoa
+     * ngoai project_id -> Job.job_id).
+     */
+    public Milestone createMilestone(MilestoneRequest request) {
+        validateMilestoneRequest(request);
+
+        Job job = jobRepository.findById(request.getProjectId())
+                .orElseThrow(() -> new RuntimeException("Khong tim thay cong viec (Job) cho milestone nay"));
+
+        Milestone milestone = new Milestone();
+        milestone.setProject(job);
+        milestone.setTitle(request.getTitle());
+        milestone.setDescription(request.getDescription());
+        milestone.setAmount(request.getAmount());
+        milestone.setDueDate(request.getDueDate());
+        milestone.setStatus("PENDING");
+
+        return milestoneRepository.save(milestone);
+    }
+
+    /**
+     * PHAN 6 (Manage Project): cap nhat thong tin mot milestone (tieu de, mo ta,
+     * so tien, han). Chi cho phep sua khi milestone chua duoc duyet/giai ngan.
+     */
+    public Milestone updateMilestone(Long milestoneId, MilestoneRequest request) {
+        Milestone milestone = milestoneRepository.findById(milestoneId)
+                .orElseThrow(() -> new RuntimeException("Khong tim thay giai doan nay!"));
+
+        if ("APPROVED".equalsIgnoreCase(milestone.getStatus())) {
+            throw new RuntimeException("Khong the sua giai doan da duoc duyet/giai ngan");
+        }
+
+        if (request.getTitle() != null && !request.getTitle().trim().isEmpty()) {
+            milestone.setTitle(request.getTitle());
+        }
+        if (request.getDescription() != null) {
+            milestone.setDescription(request.getDescription());
+        }
+        if (request.getAmount() != null) {
+            if (request.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
+                throw new RuntimeException("So tien giai doan phai lon hon 0");
+            }
+            milestone.setAmount(request.getAmount());
+        }
+        if (request.getDueDate() != null) {
+            milestone.setDueDate(request.getDueDate());
+        }
+
+        return milestoneRepository.save(milestone);
+    }
+
+    private void validateMilestoneRequest(MilestoneRequest request) {
+        if (request.getProjectId() == null) {
+            throw new RuntimeException("projectId (job id) la bat buoc");
+        }
+        if (request.getTitle() == null || request.getTitle().trim().isEmpty()) {
+            throw new RuntimeException("Tieu de milestone la bat buoc");
+        }
+        if (request.getAmount() == null || request.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new RuntimeException("So tien milestone phai lon hon 0");
+        }
     }
 
     public Milestone submitMilestone(Long milestoneId) {
@@ -104,7 +171,7 @@ public class MilestoneService {
         milestoneRepository.save(milestone);
 
         // 4. Neu tat ca milestone cua Job da APPROVED thi Job hoan thanh
-        List<Milestone> allMilestones = milestoneRepository.findByProjectId(milestone.getProjectId());
+        List<Milestone> allMilestones = milestoneRepository.findByProject_JobId(milestone.getProjectId());
         boolean allApproved = allMilestones.stream()
                 .allMatch(m -> "APPROVED".equalsIgnoreCase(m.getStatus()));
 
