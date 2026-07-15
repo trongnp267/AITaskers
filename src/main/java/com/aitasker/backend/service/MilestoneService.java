@@ -33,12 +33,6 @@ public class MilestoneService {
         return milestoneRepository.findByProject_JobId(projectId);
     }
 
-    /**
-     * PHAN 6 (Manage Project): TRUOC DAY khong co endpoint/ham nao tao milestone
-     * (chi co list + submit), nen thuc te khong co cach nao them giai doan cho
-     * mot Job qua API. Bo sung tao milestone gan voi mot Job co that (khoa
-     * ngoai project_id -> Job.job_id).
-     */
     public Milestone createMilestone(MilestoneRequest request) {
         validateMilestoneRequest(request);
 
@@ -56,10 +50,6 @@ public class MilestoneService {
         return milestoneRepository.save(milestone);
     }
 
-    /**
-     * PHAN 6 (Manage Project): cap nhat thong tin mot milestone (tieu de, mo ta,
-     * so tien, han). Chi cho phep sua khi milestone chua duoc duyet/giai ngan.
-     */
     public Milestone updateMilestone(Long milestoneId, MilestoneRequest request) {
         Milestone milestone = milestoneRepository.findById(milestoneId)
                 .orElseThrow(() -> new RuntimeException("Khong tim thay giai doan nay!"));
@@ -107,19 +97,6 @@ public class MilestoneService {
         return milestoneRepository.save(milestone);
     }
 
-    /**
-     * TRUOC DAY: chua co buoc "duyet" nao sau khi Expert submit deliverable
-     * (submitMilestone chi doi status sang WAITING_FOR_APPROVAL roi dung lai).
-     * Client khong co cach nao giai ngan tien tu Escrow sang vi Expert - du
-     * Transaction.java da chua san loai "ESCROW_RELEASE" nhung chua noi nao
-     * dung toi. Bo sung day du quy trinh duyet mo ta o Escrow/Transaction:
-     * 1. Milestone phai dang WAITING_FOR_APPROVAL.
-     * 2. Escrow cua Job phai dang HELD va con du tien >= amount cua milestone.
-     * 3. Chuyen amount tu Escrow sang vi Expert, ghi lai Transaction ESCROW_RELEASE.
-     * 4. Tru amount da giai ngan khoi Escrow; het tien thi Escrow -> RELEASED.
-     * 5. Milestone -> APPROVED; neu tat ca milestone cua Job da APPROVED thi
-     *    Job -> COMPLETED.
-     */
     @Transactional
     public Milestone approveMilestone(Long milestoneId) {
         Milestone milestone = milestoneRepository.findById(milestoneId)
@@ -145,7 +122,6 @@ public class MilestoneService {
             throw new RuntimeException("So tien con lai trong quy ky quy khong du de giai ngan giai doan nay");
         }
 
-        // 1. Chuyen tien tu Escrow sang vi Expert
         Wallet expertWallet = walletRepository.findByUserId(escrow.getExpert().getUser().getId())
                 .orElseThrow(() -> new RuntimeException("Khong tim thay vi cua Expert"));
 
@@ -158,7 +134,6 @@ public class MilestoneService {
         releaseTx.setTransactionType("ESCROW_RELEASE");
         transactionRepository.save(releaseTx);
 
-        // 2. Tru tien da giai ngan khoi Escrow
         escrow.setAmount(escrow.getAmount().subtract(amount));
         if (escrow.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
             escrow.setEscrowStatus("RELEASED");
@@ -166,11 +141,9 @@ public class MilestoneService {
         escrow.setUpdatedAt(LocalDateTime.now());
         escrowRepository.save(escrow);
 
-        // 3. Danh dau Milestone da duoc duyet
         milestone.setStatus("APPROVED");
         milestoneRepository.save(milestone);
 
-        // 4. Neu tat ca milestone cua Job da APPROVED thi Job hoan thanh
         List<Milestone> allMilestones = milestoneRepository.findByProject_JobId(milestone.getProjectId());
         boolean allApproved = allMilestones.stream()
                 .allMatch(m -> "APPROVED".equalsIgnoreCase(m.getStatus()));
@@ -186,10 +159,6 @@ public class MilestoneService {
         return milestone;
     }
 
-    /**
-     * Client tu choi san pham da nop: khong dong tien nao trong Escrow bi anh
-     * huong (van HELD), Milestone quay ve REJECTED de Expert nop lai.
-     */
     public Milestone rejectMilestone(Long milestoneId) {
         Milestone milestone = milestoneRepository.findById(milestoneId)
                 .orElseThrow(() -> new RuntimeException("Khong tim thay giai doan nay!"));

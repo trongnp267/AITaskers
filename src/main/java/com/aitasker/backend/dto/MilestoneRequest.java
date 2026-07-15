@@ -3,8 +3,6 @@ package com.aitasker.backend.dto;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-// PHAN 6 (Manage Project): DTO nhan du lieu tao/cap nhat mot milestone (giai
-// doan) cua mot Job. projectId chinh la job_id ma milestone thuoc ve.
 public class MilestoneRequest {
 
     private Long projectId;

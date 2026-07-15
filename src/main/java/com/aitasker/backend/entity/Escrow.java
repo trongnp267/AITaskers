@@ -28,7 +28,6 @@ public class Escrow {
     @Column(nullable = false)
     private BigDecimal amount;
 
-    // HELD, RELEASED, REFUNDED
     @Column(nullable = false)
     private String escrowStatus;
 

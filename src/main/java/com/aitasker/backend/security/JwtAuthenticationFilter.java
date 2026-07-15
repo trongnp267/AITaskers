@@ -37,12 +37,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String token = authHeader.substring(7);
 
-        // TRUOC DAY: khong co try/catch o day. Neu token khong hop le (het han,
-        // sai chu ky, sai dinh dang...) thi jwtService.extractUsername(token)
-        // se nem exception CHUA DUOC BAT, khien request that bai am tham (403
-        // hoac 500) ma khong ai biet ly do that su la gi. Bat loi lai va GHI
-        // LOG ro rang, roi coi nhu request nay chua dang nhap (thay vi lam
-        // sap ca filter chain).
         try {
             String username = jwtService.extractUsername(token);
 

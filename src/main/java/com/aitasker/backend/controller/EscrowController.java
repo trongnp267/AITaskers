@@ -16,9 +16,6 @@ public class EscrowController {
     @Autowired
     private EscrowRepository escrowRepository;
 
-    // Luu y: trong luong nghiep vu binh thuong, Escrow duoc tao TU DONG khi
-    // ProposalService.acceptProposal() chay (xem ProposalService), khong can
-    // goi tay endpoint nay. Giu lai endpoint nay cho muc dich test/debug thu cong.
     @PostMapping("/create")
     public ResponseEntity<?> createEscrow(@RequestBody Escrow escrow) {
         try {

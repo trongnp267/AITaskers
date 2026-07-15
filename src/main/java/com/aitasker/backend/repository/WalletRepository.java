@@ -7,6 +7,5 @@ import java.util.Optional;
 
 @Repository
 public interface WalletRepository extends JpaRepository<Wallet, Long> {
-    // Quan trong: WalletController / WalletService dung ham nay de tim vi cua user
     Optional<Wallet> findByUserId(Long userId);
 }

@@ -22,9 +22,6 @@ public class MatchingAIService {
     @Autowired
     private ExpertRepository expertRepo;
 
-    // TRUOC DAY: API_KEY = "YOUR_API_KEY" bi hard-code thang trong code (khong an
-    // toan, phai sua code + build lai moi khi doi key). Chuyen sang doc tu
-    // application.properties (ai.gemini.api-key).
     @Value("${ai.gemini.api-key}")
     private String apiKey;
 
@@ -48,7 +45,6 @@ public class MatchingAIService {
                 return new ArrayList<>();
             }
 
-            // Gemini tra ve cau truc long nhau: candidates -> content -> parts -> text
             @SuppressWarnings("unchecked")
             List<Map<String, Object>> candidates = (List<Map<String, Object>>) response.getBody().get("candidates");
             if (candidates == null || candidates.isEmpty()) {
@@ -61,7 +57,6 @@ public class MatchingAIService {
             List<Map<String, Object>> parts = (List<Map<String, Object>>) content.get("parts");
             String jsonText = (String) parts.get(0).get("text");
 
-            // Loai bo cac ky tu thua nhu ```json ... ``` neu AI tra ve markdown
             jsonText = jsonText.replace("```json", "").replace("```", "").trim();
 
             ObjectMapper mapper = new ObjectMapper();

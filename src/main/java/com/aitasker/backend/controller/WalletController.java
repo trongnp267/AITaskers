@@ -31,7 +31,6 @@ public class WalletController {
         wallet.setBalance(wallet.getBalance().add(amount));
         walletRepository.save(wallet);
 
-        // TRUOC DAY: khong ghi lai bang "transactions" khi nap tien.
         Transaction depositTx = new Transaction();
         depositTx.setWallet(wallet);
         depositTx.setAmount(amount);

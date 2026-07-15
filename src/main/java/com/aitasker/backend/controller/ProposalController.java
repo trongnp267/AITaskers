@@ -30,9 +30,6 @@ public class ProposalController {
         this.proposalService = proposalService;
     }
 
-    // TRUOC DAY: khong co endpoint nao goi proposalService.createProposal(),
-    // nen mac du DTO ProposalRequest va logic tao proposal da co san, Expert
-    // khong co cach nao thuc su gui bao gia qua API.
     @PostMapping
     public ResponseEntity<?> createProposal(@RequestBody ProposalRequest request) {
         try {

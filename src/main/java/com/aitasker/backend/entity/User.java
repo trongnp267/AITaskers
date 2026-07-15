@@ -28,9 +28,6 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Truoc day tra ve danh sach rong -> Spring Security khong bao gio
-        // gan quyen ROLE_CLIENT / ROLE_EXPERT cho user, nen moi @PreAuthorize /
-        // hasRole(...) trong tuong lai se luon that bai. Gan quyen theo "role".
         if (role == null) {
             return List.of();
         }

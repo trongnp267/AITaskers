@@ -80,19 +80,6 @@ public class ProposalService {
         return proposalRepository.save(proposal);
     }
 
-    /**
-     * TRUOC DAY: ProposalController.acceptProposal() goi ham nay nhung no
-     * KHONG TON TAI trong ProposalService -> loi bien dich "cannot find
-     * symbol: method acceptProposal(Long)". Day la loi nghiem trong nhat,
-     * khien TOAN BO project khong the build.
-     *
-     * Logic o day mo phong dung quy trinh da mo ta trong kich ban SQL:
-     * 1. Proposal duoc chon chuyen sang ACCEPTED, cac proposal con lai cua
-     *    cung Job bi tu dong REJECTED.
-     * 2. Tru tien trong vi cua Client theo dung gia proposal.
-     * 3. Khoa so tien do vao Escrow (trang thai HELD) gan voi Job/Expert.
-     * 4. Job chuyen sang trang thai ASSIGNED.
-     */
     @Transactional
     public Proposal acceptProposal(Long proposalId) {
         Proposal proposal = proposalRepository.findById(proposalId)
@@ -116,20 +103,15 @@ public class ProposalService {
             throw new RuntimeException("Insufficient wallet balance to fund escrow");
         }
 
-        // 1. Tru tien kha dung cua Client
         clientWallet.setBalance(clientWallet.getBalance().subtract(price));
         walletRepository.save(clientWallet);
 
-        // TRUOC DAY: chi tru tien trong Wallet nhung KHONG ghi lai bang
-        // "transactions" - trong khi ke hoach du an yeu cau phai co lich su
-        // giao dich moi khi tien di vao Escrow. Ghi lai o day.
         Transaction escrowHoldTx = new Transaction();
         escrowHoldTx.setWallet(clientWallet);
         escrowHoldTx.setAmount(price.negate());
         escrowHoldTx.setTransactionType("ESCROW_HOLD");
         transactionRepository.save(escrowHoldTx);
 
-        // 2. Khoa tien vao Escrow
         Escrow escrow = new Escrow();
         escrow.setJob(job);
         escrow.setClient(client);
@@ -138,7 +120,6 @@ public class ProposalService {
         escrow.setEscrowStatus("HELD");
         escrowRepository.save(escrow);
 
-        // 3. Chap nhan proposal duoc chon, tu choi cac proposal con lai
         proposal.setProposalStatus("ACCEPTED");
         proposalRepository.save(proposal);
 
@@ -150,7 +131,6 @@ public class ProposalService {
             }
         }
 
-        // 4. Cap nhat trang thai Job
         job.setJobStatus("ASSIGNED");
         job.setUpdatedAt(LocalDateTime.now());
         jobRepository.save(job);

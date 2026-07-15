@@ -19,7 +19,6 @@ public class Transaction {
 
     private BigDecimal amount;
 
-    // DEPOSIT, ESCROW_HOLD, ESCROW_RELEASE
     private String transactionType;
 
     private LocalDateTime timestamp = LocalDateTime.now();

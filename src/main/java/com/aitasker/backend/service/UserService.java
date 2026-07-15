@@ -35,9 +35,6 @@ public class UserService {
         }
 
         if (request.getRole() == null || request.getRole().isBlank()) {
-            // TRUOC DAY: request.getRole().toUpperCase() duoc goi truc tiep, neu
-            // client quen gui "role" se nem NullPointerException chu khong phai
-            // loi nghiep vu ro rang.
             return "Role is required!";
         }
 

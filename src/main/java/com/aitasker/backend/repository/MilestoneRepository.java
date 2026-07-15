@@ -9,7 +9,5 @@ import java.util.List;
 @Repository
 public interface MilestoneRepository extends JpaRepository<Milestone, Long> {
 
-    // PHAN 6: milestone.project la quan he @ManyToOne toi Job, nen loc theo
-    // job id qua nested-property project.jobId.
     List<Milestone> findByProject_JobId(Long jobId);
 }

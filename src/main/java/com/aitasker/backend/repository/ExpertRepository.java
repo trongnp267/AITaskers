@@ -6,5 +6,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ExpertRepository extends JpaRepository<ExpertProfile, Long> {
-    // findAll() da co san tu JpaRepository, khong can khai bao lai
 }

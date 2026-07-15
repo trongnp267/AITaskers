@@ -25,8 +25,6 @@ public class MilestoneController {
         return ResponseEntity.ok(milestoneService.getMilestonesByProjectId(projectId));
     }
 
-    // PHAN 6 (Manage Project): TRUOC DAY chi co list + submit, khong co cach nao
-    // tao milestone qua API. Bo sung POST tao moi va PUT cap nhat milestone.
     @PostMapping
     public ResponseEntity<?> createMilestone(@RequestBody MilestoneRequest request) {
         try {
@@ -68,9 +66,6 @@ public class MilestoneController {
         return ResponseEntity.ok(updatedMilestone);
     }
 
-    // TRUOC DAY: chi co endpoint submit, khong co endpoint nao de Client duyet
-    // hoac tu choi san pham -> tien trong Escrow khong bao gio duoc giai ngan
-    // sang vi Expert. Bo sung 2 endpoint con thieu nay.
     @PostMapping("/{id}/approve")
     public ResponseEntity<Milestone> approveDeliverable(@PathVariable("id") Long milestoneId) {
         Milestone updatedMilestone = milestoneService.approveMilestone(milestoneId);
