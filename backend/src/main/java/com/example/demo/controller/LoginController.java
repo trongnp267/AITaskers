@@ -29,10 +29,9 @@ public class LoginController {
         String username = loginData.get("username");
         String password = loginData.get("password");
 
-        Optional<User> userOpt = userService.authenticate(username, password);
+        User user = userService.authenticate(username, password);
 
-        if (userOpt.isPresent()) {
-            User user = userOpt.get();
+        if (user != null) {
             UserResponse userResponse = new UserResponse();
             userResponse.setId(user.getId());
             userResponse.setUsername(user.getUsername());

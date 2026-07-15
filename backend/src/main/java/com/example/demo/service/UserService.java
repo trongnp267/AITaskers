@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.dto.RegisterRequest;
 import com.example.demo.entity.*;
+import com.example.demo.exception.BadRequestException;
 import com.example.demo.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,9 +19,32 @@ public class UserService {
     @Autowired private ExpertProfileRepository expertProfileRepository;
     @Autowired private BCryptPasswordEncoder passwordEncoder;
 
-    public Optional<User> authenticate(String username, String password) {
-        return userRepository.findByUsername(username)
-                .filter(user -> passwordEncoder.matches(password, user.getPassword()));
+    public User authenticate(String username, String password) {
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new BadRequestException("Username does not exist."));
+
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new BadRequestException("Incorrect password.");
+        }
+
+        switch (user.getStatus()) {
+            case PENDING:
+                throw new BadRequestException(
+                        "Your account is awaiting admin approval."
+                );
+
+            case REJECTED:
+                throw new BadRequestException(
+                        "Your account has been rejected."
+                );
+
+            case APPROVED:
+                return user;
+
+            default:
+                throw new BadRequestException("Invalid account status.");
+        }
     }
 
     @Transactional
@@ -39,6 +63,7 @@ public class UserService {
         newUser.setUsername(request.getUsername());
         newUser.setPassword(hashedPassword);
         newUser.setRole(request.getRole().toUpperCase());
+        newUser.setStatus(AccountStatus.PENDING);
         User savedUser = userRepository.save(newUser);
 
         if ("CLIENT".equals(savedUser.getRole())) {
