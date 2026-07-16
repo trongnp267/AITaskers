@@ -42,15 +42,33 @@ public class MatchingAIService {
 
     public List<ExpertResult> matchExperts(String jobDescription) {
         List<ExpertProfile> experts = expertRepo.findAll();
-        String prompt = "Dua tren job: " + jobDescription + ". Expert: " + experts.toString() +
-                        ". Tra ve JSON list [{\"id\": 1, \"matchScore\": 90, \"reasoning\": \"...\"}]";
+        if (experts.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        String expertList = experts.stream()
+                .map(e -> String.format(
+                        "{\"id\": %d, \"ten\": \"%s\", \"moTa\": \"%s\", \"namKinhNghiem\": %s, \"rating\": %s, \"soJobHoanThanh\": %s}",
+                        e.getExpertId(),
+                        e.getUser() != null ? e.getUser().getUsername() : "?",
+                        e.getDescription() != null ? e.getDescription().replace("\"", "'") : "",
+                        e.getExperienceYears(),
+                        e.getRating(),
+                        e.getCompletedJobs()))
+                .collect(Collectors.joining(", "));
+
+        String prompt = "Danh sach chuyen gia: [" + expertList + "]. "
+                + "Cong viec can tuyen: " + jobDescription + ". "
+                + "Cham diem do phu hop (0-100) cua TUNG chuyen gia voi cong viec nay. "
+                + "CHI tra ve mot JSON array thuan tuy (khong markdown, khong giai thich them) theo dung dang: "
+                + "[{\"id\": 1, \"matchScore\": 90, \"reasoning\": \"ly do ngan gon bang tieng Viet\"}]";
 
         String jsonText = callGemini(prompt);
         if (jsonText == null) {
             return new ArrayList<>();
         }
         try {
-            return mapper.readValue(cleanJson(jsonText), new TypeReference<List<ExpertResult>>() {});
+            return mapper.readValue(extractJsonArray(jsonText), new TypeReference<List<ExpertResult>>() {});
         } catch (Exception e) {
             return new ArrayList<>();
         }
@@ -129,5 +147,15 @@ public class MatchingAIService {
 
     private String cleanJson(String jsonText) {
         return jsonText.replace("```json", "").replace("```", "").trim();
+    }
+
+    private String extractJsonArray(String text) {
+        String cleaned = cleanJson(text);
+        int start = cleaned.indexOf('[');
+        int end = cleaned.lastIndexOf(']');
+        if (start >= 0 && end > start) {
+            return cleaned.substring(start, end + 1);
+        }
+        return cleaned;
     }
 }
