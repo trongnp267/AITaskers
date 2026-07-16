@@ -32,6 +32,13 @@ public class EscrowController {
         }
     }
 
+    @GetMapping("/job/{jobId}")
+    public ResponseEntity<?> getEscrowByJob(@PathVariable Long jobId) {
+        return escrowRepository.findByJobJobId(jobId)
+                .<ResponseEntity<?>>map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
     @PostMapping("/{id}/release")
     public ResponseEntity<?> releaseEscrow(@PathVariable("id") Long escrowId) {
         Escrow escrow = escrowService.releaseEscrow(escrowId);

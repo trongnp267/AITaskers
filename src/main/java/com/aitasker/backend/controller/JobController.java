@@ -16,7 +16,7 @@ import com.aitasker.backend.service.JobService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @RestController
-@RequestMapping("/jobs")
+@RequestMapping("/api/jobs")
 @SecurityRequirement(name = "bearerAuth")
 public class JobController {
 

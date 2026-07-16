@@ -20,7 +20,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/proposals")
+@RequestMapping("/api/proposals")
 @SecurityRequirement(name = "bearerAuth")
 public class ProposalController {
 

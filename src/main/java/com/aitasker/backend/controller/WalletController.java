@@ -23,6 +23,16 @@ public class WalletController {
         this.transactionRepository = transactionRepository;
     }
 
+    @GetMapping("/{userId}")
+    public ResponseEntity<?> getWallet(@PathVariable Long userId) {
+        Wallet wallet = walletRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy ví người dùng"));
+        return ResponseEntity.ok(Map.of(
+            "status", "success",
+            "balance", wallet.getBalance()
+        ));
+    }
+
     @PostMapping("/deposit")
     public ResponseEntity<?> mockDeposit(@RequestParam Long userId, @RequestParam BigDecimal amount) {
         Wallet wallet = walletRepository.findByUserId(userId)
