@@ -38,18 +38,17 @@ export default function Page() {
           {jobs.length === 0 && <p className="text-gray-500">Bạn chưa đăng công việc nào.</p>}
           <div className="grid lg:grid-cols-3 sm:grid-cols-2 gap-[20px]">
             {jobs.map((job) => (
-              <Link key={job.jobId} href={`/jobs/${job.jobId}`}>
-                <JobCard2
-                  id={job.jobId}
-                  title={job.title}
-                  positionRequirement={job.positionRequirement}
-                  budgetMin={job.budgetMin}
-                  budgetMax={job.budgetMax}
-                  experience={job.minExperienceYears}
-                  technologies={job.jobSkills}
-                  deadline={job.deadline}
-                />
-              </Link>
+              <JobCard2
+                key={job.jobId}
+                id={job.jobId}
+                title={job.title}
+                positionRequirement={job.positionRequirement}
+                budgetMin={job.budgetMin}
+                budgetMax={job.budgetMax}
+                experience={job.minExperienceYears}
+                technologies={job.jobSkills}
+                deadline={job.deadline}
+              />
             ))}
           </div>
         </div>

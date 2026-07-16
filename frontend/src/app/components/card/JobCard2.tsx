@@ -20,7 +20,6 @@ export const JobCard2 = (props: {
   }[];
 }) => {
   const {id, title, budgetMin, budgetMax, experience, technologies, positionRequirement, deadline} = props;
-  console.log(technologies);
   return (
     <>
       <div className="card-item">
@@ -57,17 +56,11 @@ export const JobCard2 = (props: {
             }
           </div>
           <div className="flex justify-center gap-[12px] flex-wrap mt-[20px]">
-            <Link 
-              href={"#"}
-              className="px-[20px] py-[8px] rounded-[8px] font-[400] text-[14px] text-[#000000] bg-[#FFB200] inline-block"
+            <Link
+              href={`/jobs/${id}`}
+              className="px-[20px] py-[8px] rounded-[8px] font-[600] text-[14px] text-[#FFFFFF] bg-[#0088FF] inline-block"
             >
-              Sửa
-            </Link>
-            <Link 
-              href={"#"}
-              className="px-[20px] py-[8px] rounded-[8px] font-[400] text-[14px] text-[#FFFFFF] bg-[#FF0000] inline-block"
-            >
-              Xóa
+              Xem chi tiết &amp; báo giá
             </Link>
           </div>
         </div>
