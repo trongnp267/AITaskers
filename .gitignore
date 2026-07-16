@@ -33,3 +33,5 @@ build/
 .vscode/
 *.log
 autostart-aitasker.bat
+cloudflared.exe
+tunnel.log
