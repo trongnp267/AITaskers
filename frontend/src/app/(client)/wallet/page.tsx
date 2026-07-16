@@ -42,8 +42,11 @@ export default function WalletPage() {
       setBalance(res.balance);
       setAmount(0);
       toast.success("Nạp tiền thành công");
-    } catch {
-      toast.error("Nạp tiền thất bại");
+    } catch (error: unknown) {
+      const message =
+        (error as { response?: { data?: { message?: string } } })?.response?.data?.message ||
+        "Nạp tiền thất bại";
+      toast.error(message);
     }
   };
 
