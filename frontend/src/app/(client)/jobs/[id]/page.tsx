@@ -122,8 +122,13 @@ export default function JobDetailPage() {
 
   const doMatch = async () => {
     try {
-      setMatches(await matchExpertsForJob(jobId));
-      toast.success("Đã gọi AI gợi ý expert");
+      const result = await matchExpertsForJob(jobId);
+      setMatches(result);
+      if (result.length === 0) {
+        toast.error("AI chưa được cấu hình (cần Gemini API key trong application.properties) hoặc không có gợi ý.");
+      } else {
+        toast.success(`AI gợi ý ${result.length} expert`);
+      }
     } catch {
       toast.error("Gợi ý AI thất bại");
     }
