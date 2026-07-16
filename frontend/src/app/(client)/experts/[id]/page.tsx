@@ -6,7 +6,8 @@ import { LuBriefcaseBusiness } from "react-icons/lu";
 import toast from "react-hot-toast";
 import { getExpert, ExpertSummary } from "@/app/services/expertService";
 import { getReviewsForExpert, createReview } from "@/app/services/reviewService";
-import { Review } from "@/app/types/domain";
+import { getJobs } from "@/app/services/jobService";
+import { Review, Job } from "@/app/types/domain";
 import { getCurrentUser } from "@/app/lib/auth";
 
 export default function Page({ params }: { params: Promise<{ id: string }> }) {
@@ -16,6 +17,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
 
   const [expert, setExpert] = useState<ExpertSummary | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [myJobs, setMyJobs] = useState<Job[]>([]);
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
   const [jobId, setJobId] = useState("");
@@ -27,10 +29,19 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
 
   useEffect(() => { load(); }, [load]);
 
+  useEffect(() => {
+    const u = getCurrentUser();
+    if (u?.role === "CLIENT" && u.profileId) {
+      getJobs()
+        .then((all) => setMyJobs(all.filter((j) => j.clientId === u.profileId)))
+        .catch(() => {});
+    }
+  }, []);
+
   const handleReview = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) { toast.error("Vui lòng đăng nhập để đánh giá"); return; }
-    if (!jobId) { toast.error("Nhập mã công việc đã hợp tác"); return; }
+    if (!jobId) { toast.error("Vui lòng chọn công việc đã hợp tác"); return; }
     try {
       await createReview({
         jobId: Number(jobId),
@@ -106,8 +117,13 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                         className="border border-[#DEDEDE] rounded-[4px] px-[10px] py-[6px] text-[14px]">
                   {[5,4,3,2,1].map(v => <option key={v} value={v}>{v} sao</option>)}
                 </select>
-                <input value={jobId} onChange={(e) => setJobId(e.target.value)} placeholder="Mã công việc"
-                       className="border border-[#DEDEDE] rounded-[4px] px-[10px] py-[6px] text-[14px] w-[140px]" />
+                <select value={jobId} onChange={(e) => setJobId(e.target.value)}
+                        className="border border-[#DEDEDE] rounded-[4px] px-[10px] py-[6px] text-[14px] max-w-[280px]">
+                  <option value="">— Chọn công việc đã hợp tác —</option>
+                  {myJobs.map((j) => (
+                    <option key={j.jobId} value={j.jobId}>{j.title}</option>
+                  ))}
+                </select>
               </div>
               <textarea value={comment} onChange={(e) => setComment(e.target.value)} placeholder="Nhận xét..."
                         className="border border-[#DEDEDE] rounded-[4px] px-[12px] py-[8px] text-[14px] h-[80px]" />
