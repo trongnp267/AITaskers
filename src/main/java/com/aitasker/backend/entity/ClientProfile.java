@@ -19,7 +19,7 @@ public class ClientProfile {
     @Column(name = "company_name")
     private String companyName;
 
-    @Column(name = "description", columnDefinition = "NVARCHAR(MAX)")
+    @Column(name = "description", length = 10000)
     private String description;
 
     @Column(name = "created_at")

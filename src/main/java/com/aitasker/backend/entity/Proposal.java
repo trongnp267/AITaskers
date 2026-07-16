@@ -29,7 +29,7 @@ public class Proposal {
     @JoinColumn(name = "job_id", nullable = false)
     private Job job;
 
-    @Column(name = "cover_letter", nullable = false, columnDefinition = "NVARCHAR(MAX)")
+    @Column(name = "cover_letter", nullable = false, length = 10000)
     private String coverLetter;
 
     @Column(name = "proposal_price", nullable = false)

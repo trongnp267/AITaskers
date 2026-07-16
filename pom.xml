@@ -46,6 +46,13 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- PostgreSQL driver (dung khi deploy len cloud voi profile "cloud") -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
         <!-- H2: database chay ngay trong bo nho, KHONG can cai dat SQL Server gi ca.
              Day la profile MAC DINH de ban chay va test duoc ngay lap tuc. -->
         <dependency>

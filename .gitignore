@@ -35,3 +35,4 @@ build/
 autostart-aitasker.bat
 cloudflared.exe
 tunnel.log
+config/

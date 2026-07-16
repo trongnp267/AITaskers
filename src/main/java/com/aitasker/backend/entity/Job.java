@@ -36,7 +36,7 @@ public class Job {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "description", columnDefinition = "NVARCHAR(MAX)")
+    @Column(name = "description", length = 10000)
     private String description;
 
     @Column(name = "position_requirement")
