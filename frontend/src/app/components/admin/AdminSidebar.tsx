@@ -2,13 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { logout } from "@/app/lib/auth";
 
 import {
   FaHome,
-  FaUsers,
   FaClipboardCheck,
-  FaProjectDiagram,
-  FaCog,
+  FaGlobe,
   FaSignOutAlt,
 } from "react-icons/fa";
 
@@ -30,19 +29,9 @@ const menus: MenuItem[] = [
     icon: <FaClipboardCheck />,
   },
   {
-    title: "Users",
-    href: "/admin/users",
-    icon: <FaUsers />,
-  },
-  {
-    title: "Projects",
-    href: "/admin/projects",
-    icon: <FaProjectDiagram />,
-  },
-  {
-    title: "Settings",
-    href: "/admin/settings",
-    icon: <FaCog />,
+    title: "Về trang web",
+    href: "/",
+    icon: <FaGlobe />,
   },
 ];
 
@@ -95,6 +84,7 @@ export default function AdminSidebar() {
       <div className="border-t border-slate-700 p-4">
 
         <button
+          onClick={logout}
           className="flex w-full items-center gap-3 rounded-lg px-4 py-3 hover:bg-red-600 transition"
         >
           <FaSignOutAlt />

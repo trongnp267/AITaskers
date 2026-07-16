@@ -1,6 +1,10 @@
+"use client"
+
 import AdminHeader from "@/app/components/admin/AdminHeader";
 import AdminSidebar from "@/app/components/admin/AdminSidebar";
-import { ReactNode } from "react";
+import { getCurrentUser } from "@/app/lib/auth";
+import { useRouter } from "next/navigation";
+import { ReactNode, useEffect, useState } from "react";
 
 
 interface AdminLayoutProps {
@@ -10,6 +14,26 @@ interface AdminLayoutProps {
 export default function AdminLayout({
   children,
 }: AdminLayoutProps) {
+  const router = useRouter();
+  const [checked, setChecked] = useState(false);
+
+  useEffect(() => {
+    const user = getCurrentUser();
+    if (!user || user.role !== "ADMIN") {
+      router.replace("/admin/login");
+      return;
+    }
+    setChecked(true);
+  }, [router]);
+
+  if (!checked) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-gray-100 text-gray-500">
+        Đang kiểm tra quyền truy cập...
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-screen bg-gray-100">
       <AdminSidebar />

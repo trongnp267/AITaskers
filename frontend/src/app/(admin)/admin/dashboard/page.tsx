@@ -6,9 +6,16 @@ import { getStats, AdminStats } from "@/app/services/adminService";
 
 export default function DashboardPage() {
   const [stats, setStats] = useState<AdminStats | null>(null);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    getStats().then(setStats).catch(() => {});
+    getStats()
+      .then(setStats)
+      .catch(() => {
+        setError(
+          "Không tải được số liệu. Phiên đăng nhập admin có thể đã hết hạn — hãy đăng nhập lại bằng tài khoản admin."
+        );
+      });
   }, []);
 
   const cards = [
@@ -28,6 +35,15 @@ export default function DashboardPage() {
       <p className="text-gray-500 mb-8">
         Welcome back, Admin 👋
       </p>
+
+      {error && (
+        <div className="mb-6 rounded-lg bg-red-50 border border-red-200 text-red-700 px-5 py-4">
+          {error}{" "}
+          <Link href="/admin/login" className="underline font-semibold">
+            Đăng nhập lại
+          </Link>
+        </div>
+      )}
 
       <div className="grid lg:grid-cols-3 sm:grid-cols-2 gap-4">
         {cards.map((c) => (
