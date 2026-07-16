@@ -46,15 +46,15 @@ public class UserService {
     @Transactional
     public String registerUser(RegisterRequest request) {
         if (request.getPassword() == null || !request.getPassword().equals(request.getConfirmPassword())) {
-            return "Passwords do not match!";
+            return "Mật khẩu nhập lại không khớp!";
         }
 
         if (request.getRole() == null || request.getRole().isBlank()) {
-            return "Role is required!";
+            return "Thiếu vai trò tài khoản (role)!";
         }
 
         if (userRepository.findByUsername(request.getUsername()).isPresent()) {
-            return "Account already exists!";
+            return "Tên đăng nhập này đã được đăng ký rồi! Mỗi email chỉ dùng cho MỘT tài khoản - hãy dùng email/tên khác.";
         }
 
         String hashedPassword = passwordEncoder.encode(request.getPassword());
