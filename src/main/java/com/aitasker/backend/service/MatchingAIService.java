@@ -77,7 +77,6 @@ public class MatchingAIService {
             try {
                 return mapper.readValue(cleanJson(jsonText), new TypeReference<Map<String, Object>>() {});
             } catch (Exception ignored) {
-                // roi xuong fallback ben duoi
             }
         }
 
