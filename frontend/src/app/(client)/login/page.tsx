@@ -5,7 +5,7 @@ import { ButtonGroup2 } from "@/app/components/form/ButtonGroup2";
 import { login } from "@/app/services/authService";
 import { saveSession } from "@/app/lib/auth";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 export default function Page() {
@@ -13,6 +13,12 @@ export default function Page() {
     username: "",
     password: "",
   });
+
+  useEffect(() => {
+    if (window.location.search.includes("expired=1")) {
+      toast.error("Phiên đăng nhập đã hết hạn — vui lòng đăng nhập lại.");
+    }
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({
