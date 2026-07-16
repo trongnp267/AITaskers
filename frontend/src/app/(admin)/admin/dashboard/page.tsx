@@ -19,11 +19,11 @@ export default function DashboardPage() {
   }, []);
 
   const cards = [
-    { label: "Tổng người dùng", value: stats?.totalUsers, color: "bg-blue-50 text-blue-700" },
-    { label: "Tài khoản chờ duyệt", value: stats?.pendingAccounts, color: "bg-yellow-50 text-yellow-700" },
-    { label: "Công việc", value: stats?.totalJobs, color: "bg-green-50 text-green-700" },
-    { label: "Báo giá", value: stats?.totalProposals, color: "bg-purple-50 text-purple-700" },
-    { label: "Giao dịch ký quỹ", value: stats?.totalEscrows, color: "bg-red-50 text-red-700" },
+    { label: "Tổng người dùng", value: stats?.totalUsers, color: "bg-blue-50 text-blue-700", href: "/admin/approvals", hint: "Xem tài khoản chờ duyệt" },
+    { label: "Tài khoản chờ duyệt", value: stats?.pendingAccounts, color: "bg-yellow-50 text-yellow-700", href: "/admin/approvals", hint: "Duyệt tài khoản" },
+    { label: "Công việc", value: stats?.totalJobs, color: "bg-green-50 text-green-700", href: "/jobs", hint: "Xem danh sách công việc" },
+    { label: "Báo giá", value: stats?.totalProposals, color: "bg-purple-50 text-purple-700", href: "/jobs", hint: "Báo giá nằm trong từng công việc" },
+    { label: "Giao dịch ký quỹ", value: stats?.totalEscrows, color: "bg-red-50 text-red-700", href: "/jobs", hint: "Ký quỹ nằm trong từng công việc" },
   ];
 
   return (
@@ -47,10 +47,11 @@ export default function DashboardPage() {
 
       <div className="grid lg:grid-cols-3 sm:grid-cols-2 gap-4">
         {cards.map((c) => (
-          <div key={c.label} className={`rounded-xl p-6 ${c.color}`}>
+          <Link key={c.label} href={c.href} title={c.hint}
+                className={`rounded-xl p-6 ${c.color} block hover:shadow-lg hover:scale-[1.02] transition`}>
             <p className="text-sm font-medium">{c.label}</p>
             <p className="text-4xl font-bold mt-2">{c.value ?? "—"}</p>
-          </div>
+          </Link>
         ))}
       </div>
 
