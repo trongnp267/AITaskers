@@ -1,6 +1,6 @@
 "use client"
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { ExpertCard } from "@/app/components/card/ExpertCard";
 import { Section1 } from "@/app/components/section/Section1";
@@ -11,6 +11,7 @@ function SearchExperts() {
   const q = (searchParams.get("q") || "").toLowerCase();
   const [experts, setExperts] = useState<ExpertSummary[]>([]);
   const [loading, setLoading] = useState(true);
+  const resultRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     getExperts()
@@ -18,6 +19,12 @@ function SearchExperts() {
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
+
+  useEffect(() => {
+    if (q) {
+      resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [q]);
 
   const filtered = q
     ? experts.filter(
@@ -28,7 +35,7 @@ function SearchExperts() {
     : experts;
 
   return (
-    <div className="py-[60px]">
+    <div ref={resultRef} className="py-[60px] scroll-mt-[70px]">
       <div className="contain">
         <h2 className="mb-[30px] font-[700] text-[28px] text-[#121212]">
           {filtered.length} chuyên gia{" "}

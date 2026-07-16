@@ -1,6 +1,6 @@
 "use client"
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Section1 } from "@/app/components/section/Section1";
@@ -12,6 +12,7 @@ function SearchJobs() {
   const q = (searchParams.get("q") || "").toLowerCase();
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
+  const resultRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     getJobs()
@@ -19,6 +20,12 @@ function SearchJobs() {
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
+
+  useEffect(() => {
+    if (q) {
+      resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [q]);
 
   const filtered = jobs.filter((j) => {
     if (!q) return true;
@@ -31,7 +38,7 @@ function SearchJobs() {
   });
 
   return (
-    <div className="py-[60px]">
+    <div ref={resultRef} className="py-[60px] scroll-mt-[70px]">
       <div className="contain">
         <h2 className="mb-[30px] font-[700] text-[28px] text-[#121212]">
           {filtered.length} việc làm{" "}
