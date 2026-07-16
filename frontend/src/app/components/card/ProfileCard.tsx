@@ -8,7 +8,7 @@ export const ProfileCard = () => {
   return (
     <Link
       href="#"
-      className="p-[24px] rounded-[16px] border border-[#e9e9e9] block"
+      className="p-[24px] rounded-[16px] border border-[#e9e9e9] block hover:border-blue-600 hover:shadow-xl transition-all duration-300"
     >
       <div
         className="flex items-center gap-[16px]"
