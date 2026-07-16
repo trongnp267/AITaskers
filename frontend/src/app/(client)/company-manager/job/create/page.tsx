@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 
 export default function Page() {
   const [clientId, setClientId] = useState<number | null>(null);
+  const [wrongRole, setWrongRole] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -30,7 +31,7 @@ export default function Page() {
       return;
     }
     if (user.role !== "CLIENT" || !user.profileId) {
-      toast.error("Chỉ tài khoản Client mới đăng công việc");
+      setWrongRole(`${user.username} (${user.role})`);
       return;
     }
     setClientId(user.profileId);
@@ -74,6 +75,30 @@ export default function Page() {
       toast.error(message);
     }
   };
+
+  if (wrongRole) {
+    return (
+      <div className="py-[60px]">
+        <div className="contain">
+          <div className="bg-white rounded-[8px] border border-[#DEDEDE] p-[30px] max-w-[640px] mx-auto">
+            <h1 className="font-[700] text-[20px] text-black mb-[12px]">Chỉ tài khoản Công ty (Client) mới đăng được công việc</h1>
+            <p className="text-[14px] text-[#414042] mb-[16px]">
+              Bạn đang đăng nhập bằng <b>{wrongRole}</b> — vai này không đăng tin tuyển dụng được.
+              Hãy đăng nhập bằng tài khoản Công ty, hoặc đăng ký tài khoản Công ty mới.
+            </p>
+            <div className="flex gap-[10px] flex-wrap">
+              <Link href="/login" className="bg-blue-600 text-white rounded-[6px] px-[18px] py-[10px] font-[600] text-[14px]">
+                Đăng nhập tài khoản khác
+              </Link>
+              <Link href="/company/register" className="border border-blue-600 text-blue-600 rounded-[6px] px-[18px] py-[10px] font-[600] text-[14px]">
+                Đăng ký tài khoản Công ty
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
