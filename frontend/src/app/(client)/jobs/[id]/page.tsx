@@ -39,14 +39,13 @@ export default function JobDetailPage() {
     try {
       const j = await getJob(jobId);
       setJob(j);
-      const p = await getProposalsByJob(jobId);
-      setProposals(p);
-      setEscrow(await getEscrowByJob(jobId));
     } catch {
       toast.error("Không tải được công việc");
     } finally {
       setLoading(false);
     }
+    getProposalsByJob(jobId).then(setProposals).catch(() => {});
+    getEscrowByJob(jobId).then(setEscrow).catch(() => {});
   }, [jobId]);
 
   useEffect(() => {
