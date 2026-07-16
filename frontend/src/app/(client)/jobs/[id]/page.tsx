@@ -182,6 +182,36 @@ export default function JobDetailPage() {
           )}
         </div>
 
+        {/* Huong dan khi chua dang nhap hoac sai vai */}
+        {!user && (
+          <div className="bg-blue-50 border border-blue-200 rounded-[8px] p-[20px] text-[14px] text-[#414042]">
+            <p className="font-[600] text-[15px] text-black mb-[8px]">
+              Bạn muốn thao tác với công việc này?
+            </p>
+            <p className="mb-[4px]">• Là <b>Chuyên gia (Expert)</b>: đăng nhập để gửi báo giá cho công việc này.</p>
+            <p className="mb-[12px]">• Là <b>Chủ tin đăng (Client)</b>: đăng nhập để duyệt báo giá, ký quỹ và nghiệm thu.</p>
+            <Link href="/login" className="inline-block bg-blue-600 text-white rounded-[6px] px-[18px] py-[9px] font-[600] mr-[10px]">
+              Đăng nhập
+            </Link>
+            <Link href="/register" className="inline-block border border-blue-600 text-blue-600 rounded-[6px] px-[18px] py-[9px] font-[600]">
+              Đăng ký
+            </Link>
+          </div>
+        )}
+        {user && !isExpert && !isClientOwner && (
+          <div className="bg-yellow-50 border border-yellow-200 rounded-[8px] p-[20px] text-[14px] text-[#414042]">
+            Bạn đang đăng nhập bằng <b>{user.username}</b> ({user.role}).
+            {user.role === "CLIENT"
+              ? " Chỉ chủ tin đăng (người tạo công việc này) mới thấy phần duyệt báo giá và ký quỹ."
+              : " Tài khoản này không thao tác trực tiếp với công việc — Expert gửi báo giá, Client chủ tin duyệt báo giá."}
+          </div>
+        )}
+        {isExpert && job.jobStatus !== "OPEN" && (
+          <div className="bg-gray-50 border border-[#DEDEDE] rounded-[8px] p-[20px] text-[14px] text-gray-600">
+            Công việc đang ở trạng thái <b>{job.jobStatus}</b> nên không nhận thêm báo giá.
+          </div>
+        )}
+
         {/* Expert: submit proposal */}
         {isExpert && job.jobStatus === "OPEN" && (
           <Section title="Gửi báo giá (Proposal)">
