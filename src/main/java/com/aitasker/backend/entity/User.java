@@ -31,6 +31,7 @@ public class User implements UserDetails {
     private String role;
 
     @Enumerated(EnumType.STRING)
+    @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.VARCHAR)
     private AccountStatus status;
 
     @CreationTimestamp
