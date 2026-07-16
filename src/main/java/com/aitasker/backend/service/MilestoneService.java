@@ -2,11 +2,13 @@ package com.aitasker.backend.service;
 
 import com.aitasker.backend.dto.MilestoneRequest;
 import com.aitasker.backend.entity.Escrow;
+import com.aitasker.backend.entity.ExpertProfile;
 import com.aitasker.backend.entity.Job;
 import com.aitasker.backend.entity.Milestone;
 import com.aitasker.backend.entity.Transaction;
 import com.aitasker.backend.entity.Wallet;
 import com.aitasker.backend.repository.EscrowRepository;
+import com.aitasker.backend.repository.ExpertProfileRepository;
 import com.aitasker.backend.repository.JobRepository;
 import com.aitasker.backend.repository.MilestoneRepository;
 import com.aitasker.backend.repository.TransactionRepository;
@@ -28,6 +30,7 @@ public class MilestoneService {
     private final WalletRepository walletRepository;
     private final TransactionRepository transactionRepository;
     private final JobRepository jobRepository;
+    private final ExpertProfileRepository expertProfileRepository;
     private final NotificationService notificationService;
 
     public List<Milestone> getMilestonesByProjectId(Long projectId) {
@@ -160,6 +163,11 @@ public class MilestoneService {
             job.setJobStatus("COMPLETED");
             job.setUpdatedAt(LocalDateTime.now());
             jobRepository.save(job);
+
+            ExpertProfile expert = escrow.getExpert();
+            Integer completed = expert.getCompletedJobs() == null ? 0 : expert.getCompletedJobs();
+            expert.setCompletedJobs(completed + 1);
+            expertProfileRepository.save(expert);
         }
 
         return milestone;
