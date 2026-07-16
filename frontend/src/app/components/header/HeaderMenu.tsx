@@ -1,9 +1,39 @@
+"use client"
+
 import Link from "next/link"
 import { FaAngleDown, FaAngleRight} from "react-icons/fa6"
+import { useEffect, useState } from "react"
+import { getCurrentUser, logout, CurrentUser } from "@/app/lib/auth"
 
 export const HeaderMenu = (props: any) => {
   const {showMenu} = props;
-  console.log(showMenu);
+  const [user, setUser] = useState<CurrentUser | null>(null);
+  useEffect(() => { setUser(getCurrentUser()); }, []);
+
+  const accountItems = !user
+    ? [
+        { name: "Đăng nhập", link: "/login", children: [] },
+        { name: "Đăng ký", link: "/register", children: [] },
+      ]
+    : [
+        ...(user.role === "CLIENT"
+          ? [
+              { name: "Thông tin công ty", link: "/company-manager/profile", children: [] },
+              { name: "Quản lý bài đăng", link: "/company-manager/job/list", children: [] },
+              { name: "Báo giá nhận được", link: "/company-manager/cv/list", children: [] },
+            ]
+          : []),
+        ...(user.role === "EXPERT"
+          ? [
+              { name: "Hồ sơ AI Expert", link: "/user-manager/profile", children: [] },
+              { name: "Báo giá đã gửi", link: "/user-manager/cv/list", children: [] },
+            ]
+          : []),
+        ...(user.role === "ADMIN"
+          ? [{ name: "Trang quản trị", link: "/admin/dashboard", children: [] }]
+          : []),
+      ];
+
   const menuList = [
     {
       name: "Công việc",
@@ -104,6 +134,16 @@ export const HeaderMenu = (props: any) => {
               </li>
             ))
           }
+          {accountItems.map((item, index) => (
+            <li key={"acc-" + index} className="lg:hidden">
+              <Link href={item.link}>{item.name}</Link>
+            </li>
+          ))}
+          {user && (
+            <li className="lg:hidden">
+              <a href="#" onClick={(e) => { e.preventDefault(); logout(); }}>Đăng xuất</a>
+            </li>
+          )}
         </ul>
       </nav>
     </>
