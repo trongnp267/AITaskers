@@ -41,7 +41,7 @@ export default function Page() {
         description: formData.description,
       });
       if (data.message?.includes("thành công")) {
-        toast.success("Đăng ký thành công. Vui lòng chờ admin duyệt.");
+        toast.success("Đăng ký thành công! Hãy đăng nhập ngay.");
         window.location.href = "/login";
       } else {
         toast.error(data.message);

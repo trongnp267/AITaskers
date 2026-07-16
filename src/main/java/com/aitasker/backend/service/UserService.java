@@ -23,6 +23,9 @@ public class UserService {
     @Autowired private ExpertProfileRepository expertProfileRepository;
     @Autowired private BCryptPasswordEncoder passwordEncoder;
 
+    @org.springframework.beans.factory.annotation.Value("${app.require-admin-approval:true}")
+    private boolean requireAdminApproval;
+
     public User authenticate(String username, String password) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new BadRequestException(
@@ -63,7 +66,7 @@ public class UserService {
         newUser.setUsername(request.getUsername());
         newUser.setPassword(hashedPassword);
         newUser.setRole(request.getRole().toUpperCase());
-        newUser.setStatus(AccountStatus.PENDING);
+        newUser.setStatus(requireAdminApproval ? AccountStatus.PENDING : AccountStatus.APPROVED);
         User savedUser = userRepository.save(newUser);
 
         Wallet wallet = new Wallet();
