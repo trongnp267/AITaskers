@@ -163,6 +163,10 @@ public class ProposalService {
         return proposalRepository.findByJobJobId(jobId);
     }
 
+    public List<Proposal> getProposalsByExpertId(Long expertId) {
+        return proposalRepository.findByExpertExpertId(expertId);
+    }
+
     private void validateProposalRequest(ProposalRequest request) {
         if (request.getExpertId() == null) {
             throw new RuntimeException("Expert ID is required");

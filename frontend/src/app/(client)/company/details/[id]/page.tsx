@@ -1,73 +1,81 @@
-import { JobCard } from "@/app/components/card/JobCard";
-import { CompanyDescription } from "@/app/components/description/CompanyDescription";
-import { FaLocationDot } from "react-icons/fa6";
+"use client"
 
-export default function Page() {
+import { use, useEffect, useState } from "react";
+import Link from "next/link";
+import { FaBuilding } from "react-icons/fa6";
+import { getClient, ClientSummary } from "@/app/services/clientService";
+import { getJobs } from "@/app/services/jobService";
+import { Job } from "@/app/types/domain";
+
+export default function Page({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
+  const clientId = Number(id);
+
+  const [client, setClient] = useState<ClientSummary | null>(null);
+  const [jobs, setJobs] = useState<Job[]>([]);
+
+  useEffect(() => {
+    getClient(clientId).then(setClient).catch(() => {});
+    getJobs()
+      .then((all) => setJobs(all.filter((j) => j.clientId === clientId)))
+      .catch(() => {});
+  }, [clientId]);
+
+  if (!client) {
+    return <div className="contain py-[60px] text-gray-500">Đang tải...</div>;
+  }
+
   return (
     <>
       <div className="pt-[30px] pb-[60px]">
         <div className="contain">
-          {/* Thônng tin công ty */}
           <div className="p-[20px] border border-[#DEDEDE] bg-white rounded-[8px]">
-            <div className="flex gap-[16px] mb-[20px] md:flex-nowrap flex-wrap">
-              <img src="/assets/images/company-in4-logo.png" alt="" className="w-[100px] aspect-square rounded-[4px] object-contain" />
+            <div className="flex gap-[16px] mb-[20px] md:flex-nowrap flex-wrap items-center">
+              <div className="w-[100px] h-[100px] rounded-[4px] bg-[#000065] text-white flex items-center justify-center text-[40px]">
+                <FaBuilding />
+              </div>
               <div className="md:flex-1">
-                <h1 className="font-[700] text-[28px] text-[#121212] mb-[10px]">
-                  LG CNS Việt Nam
+                <h1 className="font-[700] text-[28px] text-[#121212] mb-[6px]">
+                  {client.companyName || client.username}
                 </h1>
-                <div className="font-[400] text-[14px] text-[#121212] flex items-center gap-[8px]">
-                  <FaLocationDot className="text-[16px]" /> Tầng 15, tòa Keangnam Landmark 72, Mễ Trì, Nam Tu Liem, Ha Noi
-                </div>
+                <p className="text-[14px] text-gray-500">
+                  Tài khoản: {client.username}
+                  {client.createdAt && <> · Tham gia {new Date(client.createdAt).toLocaleDateString("vi-VN")}</>}
+                </p>
               </div>
             </div>
-            <div className="flex flex-col gap-[10px]">
-              <CompanyDescription
-                label="Mô hình công ty:"
-                content="Sản phẩm"
-                className="justify-start"
-                gap="gap-[5px]"
-              />
-              <CompanyDescription
-                label="Quy mô công ty:"
-                content="151 - 300 nhân viên"
-                className="justify-start"
-                gap="gap-[5px]"
-              />
-              <CompanyDescription
-                label="Thời gian làm việc:"
-                content="Thứ 2 - Thứ 6"
-                className="justify-start"
-                gap="gap-[5px]"
-              />
-              <CompanyDescription
-                label="Làm việc ngoài giờ:"
-                content="Không có OT"
-                className="justify-start"
-                gap="gap-[5px]"
-              />
-            </div>
           </div>
-          {/* Hết Thônng tin công ty */}
 
-          {/* Mô tả chi tiết */}
-          <div className="p-[20px] border border-[#DEDEDE] bg-white rounded-[8px] mt-[20px]">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptatum, magnam. Assumenda accusamus possimus minima maiores at a quis sunt pariatur esse, cumque facilis recusandae, dolor odit distinctio illum! Sit, culpa? Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit nisi, ad necessitatibus porro non id odio similique nam, eos excepturi debitis quam facilis doloremque nihil fuga maiores mollitia dolorem sequi. Lorem, ipsum dolor sit amet consectetur adipisicing elit. Et, mollitia soluta aut, autem, saepe veniam sunt quis beatae quibusdam repellendus iusto minus at blanditiis nihil distinctio ea quaerat eaque tempora.
+          <div className="p-[20px] border border-[#DEDEDE] bg-white rounded-[8px] mt-[20px] text-[15px] text-[#414042] whitespace-pre-line">
+            {client.description || "Công ty chưa có mô tả."}
           </div>
-          {/* Hết Mô tả chi tiết */}
-          {/* Việc làm */}
+
           <div className="mt-[30px]">
             <h2 className="font-[700] text-[28px] text-[#121212] mb-[20px]">
-              Công ty có 6 việc làm
+              Công ty có {jobs.length} việc làm
             </h2>
-            <div className="grid lg:grid-cols-3 sm:grid-cols-2 gap-[20px]">
-              <JobCard />
-              <JobCard />
-              <JobCard />
-              <JobCard />
-              <JobCard />
+            {jobs.length === 0 && <p className="text-gray-500">Công ty chưa đăng việc làm nào.</p>}
+            <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-[20px]">
+              {jobs.map((job) => (
+                <Link
+                  key={job.jobId}
+                  href={`/jobs/${job.jobId}`}
+                  className="bg-white rounded-[8px] border border-[#DEDEDE] p-[20px] hover:shadow-md transition block"
+                >
+                  <div className="flex justify-between items-start gap-[8px]">
+                    <h3 className="font-[700] text-[16px] text-black line-clamp-1">{job.title}</h3>
+                    <span className={`text-[11px] px-[8px] py-[2px] rounded-full whitespace-nowrap ${job.jobStatus === "OPEN" ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-600"}`}>
+                      {job.jobStatus}
+                    </span>
+                  </div>
+                  <p className="text-[13px] text-gray-500 mt-[8px] line-clamp-2">{job.description}</p>
+                  <p className="text-[13px] text-blue-600 font-[600] mt-[10px]">
+                    {job.budgetMin?.toLocaleString("vi-VN")} - {job.budgetMax?.toLocaleString("vi-VN")} đ
+                  </p>
+                </Link>
+              ))}
             </div>
           </div>
-          {/* Hết Việc làm */}
         </div>
       </div>
     </>

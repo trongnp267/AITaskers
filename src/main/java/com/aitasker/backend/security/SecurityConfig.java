@@ -38,6 +38,10 @@ public class SecurityConfig {
                     "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html",
                     "/h2-console/**"
                 ).permitAll()
+                .requestMatchers(org.springframework.http.HttpMethod.GET,
+                    "/api/jobs/**", "/api/experts/**", "/api/clients/**",
+                    "/api/reviews/expert/**"
+                ).permitAll()
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
             )

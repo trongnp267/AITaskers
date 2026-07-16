@@ -78,4 +78,9 @@ public class ProposalController {
     public List<Proposal> getProposalsByJobId(@PathVariable Long jobId) {
         return proposalService.getProposalsByJobId(jobId);
     }
+
+    @GetMapping("/expert/{expertId}")
+    public List<Proposal> getProposalsByExpertId(@PathVariable Long expertId) {
+        return proposalService.getProposalsByExpertId(expertId);
+    }
 }

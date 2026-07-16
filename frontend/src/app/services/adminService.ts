@@ -23,3 +23,16 @@ export const rejectAccount = async (id: number): Promise<void> => {
         }
     );
 };
+
+export interface AdminStats {
+    totalUsers: number;
+    pendingAccounts: number;
+    totalJobs: number;
+    totalProposals: number;
+    totalEscrows: number;
+}
+
+export const getStats = async (): Promise<AdminStats> => {
+    const response = await api.get<AdminStats>("/admin/accounts/stats");
+    return response.data;
+};

@@ -22,133 +22,50 @@ export const HeaderMenu = (props: any) => {
     },
     {
       name: "Tìm chuyên gia",
-      link: "#",
+      link: "/search",
       children: [
         {
-          name: "Theo Kỹ Năng",
-          link: "#",
-          children: [
-            {
-              name: "AI Engineer",
-              link: "#",
-              children: []
-            },
-            {
-              name: "Frontend Developer",
-              link: "#",
-              children: []
-            },
-            {
-              name: "Backend Developer",
-              link: "#",
-              children: []
-            },
-            {
-              name: "Data Scientist",
-              link: "#",
-              children: []
-            },
-            {
-              name: "DevOps Engineer",
-              link: "#",
-              children: []
-            },
-          ]
-        },
-        {
-          name: "Theo Danh Mục",
-          link: "#",
+          name: "AI Engineer",
+          link: "/search?q=AI",
           children: []
         },
         {
-          name: "Theo Mức Giá",
-          link: "#",
+          name: "Data Scientist",
+          link: "/search?q=Data",
+          children: []
+        },
+        {
+          name: "NLP / Chatbot",
+          link: "/search?q=NLP",
           children: []
         },
       ]
     },
     {
-      name: "Dự Án",
-      link: "#",
+      name: "Tìm việc",
+      link: "/search/job",
       children: [
         {
           name: "Dự Án AI",
-          link: "#",
+          link: "/search/job?q=AI",
           children: []
         },
         {
           name: "Dự Án Website",
-          link: "#",
+          link: "/search/job?q=Website",
           children: []
         },
         {
           name: "Dự Án Mobile App",
-          link: "#",
-          children: []
-        },
-        {
-          name: "Dự Án Thiết Kế",
-          link: "#",
-          children: []
-        },
-        {
-          name: "Dự Án Marketing",
-          link: "#",
-          children: []
-        },
-      ]
-    },
-    {
-      name: "Dịch Vụ",
-      link: "#",
-      children: [
-        {
-          name: "AI Services",
-          link: "#",
-          children: []
-        },
-        {
-          name: "Design",
-          link: "#",
-          children: []
-        },
-        {
-          name: "Marketing",
-          link: "#",
-          children: []
-        },
-        {
-          name: "Development",
-          link: "#",
+          link: "/search/job?q=Mobile",
           children: []
         },
       ]
     },
     {
       name: "Doanh nghiệp",
-      link: "#",
-      children: [
-        {
-          name: "Doanh Nghiệp Nổi Bật",
-          link: "#",
-          children: []
-        },
-        {
-          name: "Đối Tác Chiến Lược",
-          link: "#",
-          children: []
-        },
-        {
-          name: "Startup Tuyển Dụng",
-          link: "#",
-          children: []
-        },
-        {
-          name: "Công Ty Công Nghệ",
-          link: "#",
-          children: []
-        },
-      ]
+      link: "/company/list",
+      children: []
     },
   ]
 

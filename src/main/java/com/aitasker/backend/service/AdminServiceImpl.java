@@ -4,12 +4,17 @@ import com.aitasker.backend.dto.PendingAccountResponse;
 import com.aitasker.backend.entity.AccountStatus;
 import com.aitasker.backend.entity.User;
 import com.aitasker.backend.exception.ResourceNotFoundException;
+import com.aitasker.backend.repository.EscrowRepository;
+import com.aitasker.backend.repository.JobRepository;
+import com.aitasker.backend.repository.ProposalRepository;
 import com.aitasker.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +22,9 @@ import java.util.List;
 public class AdminServiceImpl implements AdminService {
 
     private final UserRepository userRepository;
+    private final JobRepository jobRepository;
+    private final ProposalRepository proposalRepository;
+    private final EscrowRepository escrowRepository;
     private final NotificationService notificationService;
 
     @Override
@@ -56,6 +64,17 @@ public class AdminServiceImpl implements AdminService {
                 user.getId(),
                 "ACCOUNT_REJECTED",
                 "Tai khoan cua ban da bi tu choi." + (reason != null && !reason.isBlank() ? " Ly do: " + reason : ""));
+    }
+
+    @Override
+    public Map<String, Object> getStats() {
+        Map<String, Object> stats = new HashMap<>();
+        stats.put("totalUsers", userRepository.count());
+        stats.put("pendingAccounts", userRepository.findByStatus(AccountStatus.PENDING).size());
+        stats.put("totalJobs", jobRepository.count());
+        stats.put("totalProposals", proposalRepository.count());
+        stats.put("totalEscrows", escrowRepository.count());
+        return stats;
     }
 
     private PendingAccountResponse toResponse(User user) {

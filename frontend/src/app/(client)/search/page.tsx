@@ -1,60 +1,60 @@
-import { ProfileCard } from "@/app/components/card/ProfileCard";
+"use client"
+
+import { Suspense, useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { ExpertCard } from "@/app/components/card/ExpertCard";
 import { Section1 } from "@/app/components/section/Section1";
-import { Select1 } from "@/app/components/select/Select1";
+import { getExperts, ExpertSummary } from "@/app/services/expertService";
+
+function SearchExperts() {
+  const searchParams = useSearchParams();
+  const q = (searchParams.get("q") || "").toLowerCase();
+  const [experts, setExperts] = useState<ExpertSummary[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getExperts()
+      .then(setExperts)
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, []);
+
+  const filtered = q
+    ? experts.filter(
+        (e) =>
+          (e.username || "").toLowerCase().includes(q) ||
+          (e.description || "").toLowerCase().includes(q)
+      )
+    : experts;
+
+  return (
+    <div className="py-[60px]">
+      <div className="contain">
+        <h2 className="mb-[30px] font-[700] text-[28px] text-[#121212]">
+          {filtered.length} chuyên gia{" "}
+          {q && <span className="text-[#0088FF]">&quot;{q}&quot;</span>}
+        </h2>
+        {loading && <p className="text-gray-500">Đang tải...</p>}
+        {!loading && filtered.length === 0 && (
+          <p className="text-gray-500">Không tìm thấy chuyên gia phù hợp.</p>
+        )}
+        <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-[20px]">
+          {filtered.map((e) => (
+            <ExpertCard key={e.expertId} expert={e} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function Page() {
   return (
     <>
-      {/* Section 1 */}
       <Section1 />
-      {/* End Section 1 */}
-
-      {/* Kết quả tìm kiếm */}
-      <div className="py-[60px]">
-        <div className="contain">
-          <h2 className="mb-[30px] font-[700] text-[28px] text-[#121212]">
-            76 AI Expert  <span className="text-[#0088FF]">AI Chatbot</span>
-          </h2>
-          <div 
-            className="mb-[30px] px-[20px] py-[10px] rounded-[8px] shadow-[0px_4px_20px_0px_#0000000F] flex gap-[12px] flex-wrap"
-          >
-            <select 
-              name="experience" 
-              id=""
-              className="rounded-[20px] bg-white border border-[#DEDEDE] h-[36px] px-[18px] font-[400] text-[16px] text-[#414042]"
-            >
-              <option defaultValue="">Kinh Nghiệm</option>
-              <option defaultValue="">1-3 Kinh Nghiệm</option>
-              <option defaultValue="">3-5 Kinh Nghiệm</option>
-              <option defaultValue="">5-8 Kinh Nghiệm</option>
-              <option defaultValue="">8+ Kinh Nghiệm</option>
-            </select>
-            <select 
-              name="price" 
-              id=""
-              className="rounded-[20px] bg-white border border-[#DEDEDE] h-[36px] px-[18px] font-[400] text-[16px] text-[#414042]"
-            >
-              <option defaultValue="">Giá</option>
-              <option defaultValue="">1000$-3000$</option>
-              <option defaultValue="">3000$-5000$</option>
-              <option defaultValue="">5000$+</option>
-            </select>
-          </div>
-          <div
-            className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-[20px]"
-          >
-            <ProfileCard />
-            <ProfileCard />
-            <ProfileCard />
-            <ProfileCard />
-            <ProfileCard />
-            <ProfileCard />
-            <ProfileCard />
-          </div>
-          <Select1 />
-        </div>
-      </div>
-      {/* Hết Kết quả tìm kiếm */}
+      <Suspense fallback={<div className="contain py-[40px] text-gray-500">Đang tải...</div>}>
+        <SearchExperts />
+      </Suspense>
     </>
   )
 }

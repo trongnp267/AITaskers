@@ -11,5 +11,7 @@ public interface ProposalRepository extends JpaRepository<Proposal, Long> {
 
     List<Proposal> findByJobJobId(Long jobId);
 
+    List<Proposal> findByExpertExpertId(Long expertId);
+
     Optional<Proposal> findByExpertExpertIdAndJobJobId(Long expertId, Long jobId);
 }

@@ -6,6 +6,13 @@ export const getProposalsByJob = async (jobId: number): Promise<Proposal[]> => {
     return response.data;
 };
 
+export const getProposalsByExpert = async (
+    expertId: number
+): Promise<Proposal[]> => {
+    const response = await api.get<Proposal[]>(`/proposals/expert/${expertId}`);
+    return response.data;
+};
+
 export const getProposal = async (id: number): Promise<Proposal> => {
     const response = await api.get<Proposal>(`/proposals/${id}`);
     return response.data;

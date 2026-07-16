@@ -2,25 +2,19 @@
 
 import Link from "next/link"
 import { useEffect, useState } from "react";
+import { getCurrentUser, logout, CurrentUser } from "@/app/lib/auth";
 
 export const HeaderAccount = () => {
 
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<CurrentUser | null>(null);
 
   useEffect(() => {
-    const userData = localStorage.getItem("user");
-    if (userData) {
-      setUser(JSON.parse(userData));
-    }
+    setUser(getCurrentUser());
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    window.location.reload();
+    logout();
   }
-
-  console.log(user);
 
   return (
     <>
@@ -28,14 +22,12 @@ export const HeaderAccount = () => {
         {
           !user ? (
             <>
-              {/* Chưa đăng nhập */}
               <Link href="/login">Đăng nhập</Link>
-              <span>/</span> 
+              <span>/</span>
               <Link href="/register">Đăng ký</Link>
             </>
           ) : (
             <>
-              {/* Đã đăng nhập */}
               <nav className="menu">
                 <ul>
                   <li>
@@ -44,14 +36,8 @@ export const HeaderAccount = () => {
                       {user?.role === "CLIENT" && (
                         <>
                           <li>
-                            <Link href="#">
+                            <Link href="/company-manager/profile">
                               Thông tin công ty
-                            </Link>
-                          </li>
-
-                          <li>
-                            <Link href="#">
-                              Quản lý CV
                             </Link>
                           </li>
 
@@ -62,33 +48,55 @@ export const HeaderAccount = () => {
                           </li>
 
                           <li>
-                            <button onClick={handleLogout}>
-                              Đăng xuất
-                            </button>
+                            <Link href="/company-manager/cv/list">
+                              Báo giá nhận được
+                            </Link>
                           </li>
                         </>
                       )}
                       {user?.role === "EXPERT" && (
                         <>
                           <li>
-                            <Link href="#">
+                            <Link href="/user-manager/profile">
                               Thông tin AI Expert
                             </Link>
                           </li>
 
                           <li>
-                            <Link href="#">
-                              Quản lý CV đã gửi
+                            <Link href="/jobs">
+                              Tìm việc làm
                             </Link>
                           </li>
 
                           <li>
-                            <button onClick={handleLogout}>
-                              Đăng xuất
-                            </button>
+                            <Link href="/user-manager/cv/list">
+                              Báo giá đã gửi
+                            </Link>
                           </li>
                         </>
                       )}
+                      {user?.role === "ADMIN" && (
+                        <li>
+                          <Link href="/admin/dashboard">
+                            Trang quản trị
+                          </Link>
+                        </li>
+                      )}
+                      <li>
+                        <Link href="/wallet">
+                          Ví của tôi
+                        </Link>
+                      </li>
+                      <li>
+                        <Link href="/notifications">
+                          Thông báo
+                        </Link>
+                      </li>
+                      <li>
+                        <button onClick={handleLogout}>
+                          Đăng xuất
+                        </button>
+                      </li>
                     </ul>
                   </li>
                 </ul>
