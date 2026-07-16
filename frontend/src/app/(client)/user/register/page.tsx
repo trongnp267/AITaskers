@@ -60,12 +60,15 @@ export default function Page() {
             <form onSubmit={handleSubmit} action="" className="grid gap-x-[20px] gap-y-[15px]">
               <BoxGroup1
                 name="username"
-                label="Email *"
-                id="emai"
-                type="email"
+                label="Tên đăng nhập (dùng email của bạn) *"
+                id="username"
+                type="text"
                 values={formData.username}
                 onChange={handleChange}
               />
+              <p className="text-[12px] text-gray-500 -mt-[8px]">
+                Đây là tên bạn sẽ dùng để đăng nhập sau này.
+              </p>
               <BoxGroup1
                 name="password"
                 label="Mật khẩu *"

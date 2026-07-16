@@ -47,7 +47,7 @@ export default function Page() {
             <form onSubmit={handleSubmit} className="grid gap-x-[20px] gap-y-[15px]">
               <BoxGroup1
                 name="username"
-                label="Tên đăng nhập *"
+                label="Tên đăng nhập (email đã dùng khi đăng ký) *"
                 id="username"
                 type="text"
                 values={formData.username}

@@ -25,17 +25,19 @@ public class UserService {
 
     public User authenticate(String username, String password) {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new BadRequestException("Username does not exist."));
+                .orElseThrow(() -> new BadRequestException(
+                        "Tên đăng nhập không tồn tại. Hãy dùng đúng email bạn đã nhập khi đăng ký."));
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new BadRequestException("Incorrect password.");
+            throw new BadRequestException("Mật khẩu không đúng.");
         }
 
         if (user.getStatus() == AccountStatus.PENDING) {
-            throw new BadRequestException("Your account is awaiting admin approval.");
+            throw new BadRequestException(
+                    "Tài khoản của bạn đang chờ admin phê duyệt. Vui lòng đợi hoặc liên hệ quản trị viên.");
         }
         if (user.getStatus() == AccountStatus.REJECTED) {
-            throw new BadRequestException("Your account has been rejected.");
+            throw new BadRequestException("Tài khoản của bạn đã bị từ chối.");
         }
 
         return user;
