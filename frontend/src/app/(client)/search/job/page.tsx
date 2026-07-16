@@ -52,7 +52,7 @@ function SearchJobs() {
           {filtered.map((job) => (
             <Link
               key={job.jobId}
-              href={`/jobs/${job.jobId}`}
+              href={`/job-detail?id=${job.jobId}`}
               className="bg-white rounded-[8px] border border-[#DEDEDE] p-[20px] hover:shadow-md transition block"
             >
               <div className="flex justify-between items-start gap-[8px]">

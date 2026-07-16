@@ -31,7 +31,7 @@ export default function Page() {
             {clients.map((c) => (
               <Link
                 key={c.clientId}
-                href={`/company/details/${c.clientId}`}
+                href={`/company-detail?id=${c.clientId}`}
                 className="bg-white border border-[#DEDEDE] rounded-[8px] p-[20px] hover:border-blue-600 hover:shadow-lg transition-all block text-center"
               >
                 <div className="w-[64px] h-[64px] mx-auto rounded-[8px] bg-[#000065] text-white flex items-center justify-center text-[28px]">

@@ -36,3 +36,4 @@ autostart-aitasker.bat
 cloudflared.exe
 tunnel.log
 config/
+src/main/resources/static/

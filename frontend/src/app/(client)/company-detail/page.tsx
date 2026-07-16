@@ -1,20 +1,23 @@
 "use client"
 
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { FaBuilding } from "react-icons/fa6";
 import { getClient, ClientSummary } from "@/app/services/clientService";
 import { getJobs } from "@/app/services/jobService";
 import { Job } from "@/app/types/domain";
 
-export default function Page({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
-  const clientId = Number(id);
-
+export default function Page() {
+  const [clientId, setClientId] = useState(0);
   const [client, setClient] = useState<ClientSummary | null>(null);
   const [jobs, setJobs] = useState<Job[]>([]);
 
   useEffect(() => {
+    setClientId(Number(new URLSearchParams(window.location.search).get("id")) || 0);
+  }, []);
+
+  useEffect(() => {
+    if (!clientId) return;
     getClient(clientId).then(setClient).catch(() => {});
     getJobs()
       .then((all) => setJobs(all.filter((j) => j.clientId === clientId)))
@@ -59,7 +62,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
               {jobs.map((job) => (
                 <Link
                   key={job.jobId}
-                  href={`/jobs/${job.jobId}`}
+                  href={`/job-detail?id=${job.jobId}`}
                   className="bg-white rounded-[8px] border border-[#DEDEDE] p-[20px] hover:shadow-md transition block"
                 >
                   <div className="flex justify-between items-start gap-[8px]">

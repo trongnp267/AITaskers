@@ -1,6 +1,6 @@
 "use client"
 
-import { use, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa6";
 import { LuBriefcaseBusiness } from "react-icons/lu";
 import toast from "react-hot-toast";
@@ -8,12 +8,11 @@ import { getExpert, ExpertSummary } from "@/app/services/expertService";
 import { getReviewsForExpert, createReview } from "@/app/services/reviewService";
 import { getJobs } from "@/app/services/jobService";
 import { Review, Job } from "@/app/types/domain";
-import { getCurrentUser } from "@/app/lib/auth";
+import { getCurrentUser, CurrentUser } from "@/app/lib/auth";
 
-export default function Page({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
-  const expertId = Number(id);
-  const user = getCurrentUser();
+export default function Page() {
+  const [expertId, setExpertId] = useState(0);
+  const [user, setUser] = useState<CurrentUser | null>(null);
 
   const [expert, setExpert] = useState<ExpertSummary | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -22,7 +21,13 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const [comment, setComment] = useState("");
   const [jobId, setJobId] = useState("");
 
+  useEffect(() => {
+    setExpertId(Number(new URLSearchParams(window.location.search).get("id")) || 0);
+    setUser(getCurrentUser());
+  }, []);
+
   const load = useCallback(() => {
+    if (!expertId) return;
     getExpert(expertId).then(setExpert).catch(() => {});
     getReviewsForExpert(expertId).then(setReviews).catch(() => {});
   }, [expertId]);
@@ -30,13 +35,12 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   useEffect(() => { load(); }, [load]);
 
   useEffect(() => {
-    const u = getCurrentUser();
-    if (u?.role === "CLIENT" && u.profileId) {
+    if (user?.role === "CLIENT" && user.profileId) {
       getJobs()
-        .then((all) => setMyJobs(all.filter((j) => j.clientId === u.profileId)))
+        .then((all) => setMyJobs(all.filter((j) => j.clientId === user.profileId)))
         .catch(() => {});
     }
-  }, []);
+  }, [user]);
 
   const handleReview = async (e: React.FormEvent) => {
     e.preventDefault();

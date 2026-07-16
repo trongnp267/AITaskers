@@ -1,7 +1,6 @@
 "use client"
 
 import { useCallback, useEffect, useState } from "react";
-import { useParams } from "next/navigation";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { getCurrentUser, CurrentUser } from "@/app/lib/auth";
@@ -21,8 +20,7 @@ import { createReview } from "@/app/services/reviewService";
 import { Job, Proposal, Escrow } from "@/app/types/domain";
 
 export default function JobDetailPage() {
-  const params = useParams();
-  const jobId = Number(params.id);
+  const [jobId, setJobId] = useState(0);
 
   const [user, setUser] = useState<CurrentUser | null>(null);
   const [job, setJob] = useState<Job | null>(null);
@@ -35,7 +33,13 @@ export default function JobDetailPage() {
   const [matches, setMatches] = useState<ExpertMatch[]>([]);
   const [review, setReview] = useState({ rating: 5, comment: "" });
 
+  useEffect(() => {
+    setJobId(Number(new URLSearchParams(window.location.search).get("id")) || 0);
+    setUser(getCurrentUser());
+  }, []);
+
   const load = useCallback(async () => {
+    if (!jobId) return;
     try {
       const j = await getJob(jobId);
       setJob(j);
@@ -49,7 +53,6 @@ export default function JobDetailPage() {
   }, [jobId]);
 
   useEffect(() => {
-    setUser(getCurrentUser());
     load();
   }, [load]);
 
@@ -158,7 +161,6 @@ export default function JobDetailPage() {
   return (
     <div className="py-[40px]">
       <div className="contain grid gap-[20px]">
-        {/* Job info */}
         <div className="bg-white rounded-[8px] border border-[#DEDEDE] p-[24px]">
           <div className="flex justify-between items-start">
             <h1 className="font-[700] text-[24px] text-black">{job.title}</h1>
@@ -179,7 +181,7 @@ export default function JobDetailPage() {
           </p>
           {(isClientOwner || isExpert) && (
             <Link
-              href={`/jobs/${jobId}/milestones`}
+              href={`/milestones?job=${jobId}`}
               className="inline-block mt-[14px] text-[14px] font-[600] text-blue-600"
             >
               → Quản lý giai đoạn (milestones)
@@ -187,7 +189,6 @@ export default function JobDetailPage() {
           )}
         </div>
 
-        {/* Huong dan khi chua dang nhap hoac sai vai */}
         {!user && (
           <div className="bg-blue-50 border border-blue-200 rounded-[8px] p-[20px] text-[14px] text-[#414042]">
             <p className="font-[600] text-[15px] text-black mb-[8px]">
@@ -217,7 +218,6 @@ export default function JobDetailPage() {
           </div>
         )}
 
-        {/* Expert: submit proposal */}
         {isExpert && job.jobStatus === "OPEN" && (
           <Section title="Gửi báo giá (Proposal)">
             <form onSubmit={submitProposal} className="grid gap-[12px] max-w-[560px]">
@@ -242,7 +242,6 @@ export default function JobDetailPage() {
           </Section>
         )}
 
-        {/* Client owner: proposals + accept */}
         {isClientOwner && (
           <Section title={`Báo giá nhận được (${proposals.length})`}>
             {proposals.length === 0 && <p className="text-gray-500 text-[14px]">Chưa có báo giá.</p>}
@@ -276,7 +275,6 @@ export default function JobDetailPage() {
           </Section>
         )}
 
-        {/* Escrow (client owner) */}
         {isClientOwner && escrow && (
           <Section title="Ký quỹ (Escrow)">
             <p className="text-[14px]">Số tiền: <b>{escrow.amount?.toLocaleString("vi-VN")} đ</b> ·
@@ -294,7 +292,6 @@ export default function JobDetailPage() {
           </Section>
         )}
 
-        {/* AI (client owner) */}
         {isClientOwner && (
           <Section title="Trợ lý AI">
             <div className="flex gap-[10px] mb-[12px]">
@@ -320,7 +317,6 @@ export default function JobDetailPage() {
           </Section>
         )}
 
-        {/* Review (client owner, completed) */}
         {isClientOwner && job.jobStatus === "COMPLETED" && acceptedExpertId && (
           <Section title="Đánh giá Expert">
             <form onSubmit={doReview} className="grid gap-[12px] max-w-[560px]">

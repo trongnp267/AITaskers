@@ -1,7 +1,6 @@
 "use client"
 
 import { useCallback, useEffect, useState } from "react";
-import { useParams } from "next/navigation";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { getCurrentUser, CurrentUser } from "@/app/lib/auth";
@@ -22,14 +21,19 @@ const statusColor: Record<string, string> = {
 };
 
 export default function MilestonesPage() {
-  const params = useParams();
-  const jobId = Number(params.id);
+  const [jobId, setJobId] = useState(0);
   const [user, setUser] = useState<CurrentUser | null>(null);
   const [items, setItems] = useState<Milestone[]>([]);
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState({ title: "", amount: 0, dueDate: "" });
 
+  useEffect(() => {
+    setJobId(Number(new URLSearchParams(window.location.search).get("job")) || 0);
+    setUser(getCurrentUser());
+  }, []);
+
   const load = useCallback(async () => {
+    if (!jobId) return;
     try {
       setItems(await getMilestonesByProject(jobId));
     } catch {
@@ -40,7 +44,6 @@ export default function MilestonesPage() {
   }, [jobId]);
 
   useEffect(() => {
-    setUser(getCurrentUser());
     load();
   }, [load]);
 
@@ -77,7 +80,7 @@ export default function MilestonesPage() {
   return (
     <div className="py-[40px]">
       <div className="contain">
-        <Link href={`/jobs/${jobId}`} className="text-[14px] text-blue-600 font-[600]">← Về công việc</Link>
+        <Link href={`/job-detail?id=${jobId}`} className="text-[14px] text-blue-600 font-[600]">← Về công việc</Link>
         <h1 className="font-[700] text-[24px] text-black my-[16px]">Giai đoạn dự án (Milestones)</h1>
 
         {isClient && (

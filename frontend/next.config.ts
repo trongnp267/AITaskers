@@ -2,18 +2,12 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactStrictMode: false,
-  // Proxy API: trinh duyet goi /api/... tren cung cong 3000, Next chuyen
-  // tiep den backend 8080. Nho vay web chi can MOT cong duy nhat -> vao
-  // duoc tu localhost, IP LAN, hay duong ham (tunnel) ma khong can cau hinh.
-  async rewrites() {
-    const backend = process.env.BACKEND_URL || "http://localhost:8080";
-    return [
-      {
-        source: "/api/:path*",
-        destination: `${backend}/api/:path*`,
-      },
-    ];
-  },
+  // Xuat ra trang tinh (out/) de nhet vao Spring Boot phuc vu chung mot cong
+  // voi backend. Khong dung rewrites nua: axios goi "/api" tuong doi -> cung
+  // origin voi noi phuc vu web (backend) nen khong can proxy, khong dinh CORS.
+  output: "export",
+  trailingSlash: true,
+  images: { unoptimized: true },
 };
 
 export default nextConfig;

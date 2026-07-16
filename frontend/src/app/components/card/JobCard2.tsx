@@ -57,7 +57,7 @@ export const JobCard2 = (props: {
           </div>
           <div className="flex justify-center gap-[12px] flex-wrap mt-[20px]">
             <Link
-              href={`/jobs/${id}`}
+              href={`/job-detail?id=${id}`}
               className="px-[20px] py-[8px] rounded-[8px] font-[600] text-[14px] text-[#FFFFFF] bg-[#0088FF] inline-block"
             >
               Xem chi tiết &amp; báo giá

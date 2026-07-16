@@ -6,7 +6,7 @@ import { ExpertSummary } from "@/app/services/expertService"
 export const ExpertCard = ({ expert }: { expert: ExpertSummary }) => {
   return (
     <Link
-      href={`/experts/${expert.expertId}`}
+      href={`/expert-detail?id=${expert.expertId}`}
       className="p-[24px] rounded-[16px] border border-[#e9e9e9] block bg-white hover:border-blue-600 hover:shadow-xl transition-all duration-300"
     >
       <div className="flex items-center gap-[16px]">

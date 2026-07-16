@@ -51,7 +51,7 @@ export default function Page() {
             {jobs.map((job) => (
               <Link
                 key={job.jobId}
-                href={`/jobs/${job.jobId}`}
+                href={`/job-detail?id=${job.jobId}`}
                 className="bg-white rounded-[8px] border border-[#DEDEDE] p-[20px] hover:shadow-md transition block"
               >
                 <h3 className="font-[700] text-[16px] text-black line-clamp-1">{job.title}</h3>

@@ -43,7 +43,10 @@ public class SecurityConfig {
                     "/api/reviews/expert/**"
                 ).permitAll()
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                .anyRequest().authenticated()
+                // Cac API con lai (POST/PUT tao du lieu) van yeu cau dang nhap
+                .requestMatchers("/api/**").authenticated()
+                // Moi thu khac (frontend tinh: /, /_next/**, /job-detail/... ) la cong khai
+                .anyRequest().permitAll()
             )
             .headers(headers -> headers
                 .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)

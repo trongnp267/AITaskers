@@ -53,7 +53,7 @@ export default function Page() {
           {proposals.map((p) => (
             <Link
               key={p.proposalId}
-              href={`/jobs/${p.job?.jobId}`}
+              href={`/job-detail?id=${p.job?.jobId}`}
               className="bg-white border border-[#DEDEDE] rounded-[8px] p-[20px] hover:shadow-md transition block"
             >
               <div className="flex justify-between items-start gap-[8px]">

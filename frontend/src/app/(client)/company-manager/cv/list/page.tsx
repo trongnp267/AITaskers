@@ -68,7 +68,7 @@ export default function Page() {
               <p className="text-[13px] text-[#414042] mt-[8px]">
                 Chuyên gia:{" "}
                 {p.expert ? (
-                  <Link href={`/experts/${p.expert.expertId}`} className="text-blue-600 underline">
+                  <Link href={`/expert-detail?id=${p.expert.expertId}`} className="text-blue-600 underline">
                     {p.expert.user?.username || `Expert #${p.expert.expertId}`}
                   </Link>
                 ) : "—"}
@@ -79,7 +79,7 @@ export default function Page() {
                 {" · "}{p.estimatedDays} ngày
               </div>
               <Link
-                href={`/jobs/${p.job?.jobId}`}
+                href={`/job-detail?id=${p.job?.jobId}`}
                 className="inline-block mt-[12px] text-[13px] font-[600] text-white bg-[#0088FF] rounded-[4px] px-[14px] py-[8px]"
               >
                 Xem &amp; xử lý
