@@ -55,20 +55,20 @@ public class ProposalService {
         validateProposalRequest(request);
 
         ExpertProfile expert = expertProfileRepository.findById(request.getExpertId())
-                .orElseThrow(() -> new RuntimeException("Expert not found"));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy Expert"));
 
         Job job = jobRepository.findById(request.getJobId())
-                .orElseThrow(() -> new RuntimeException("Job not found"));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy công việc"));
 
         if (!"OPEN".equalsIgnoreCase(job.getJobStatus())) {
-            throw new RuntimeException("Only OPEN jobs can receive proposals");
+            throw new RuntimeException("Chỉ công việc đang OPEN mới nhận báo giá");
         }
 
         proposalRepository.findByExpertExpertIdAndJobJobId(
                 request.getExpertId(),
                 request.getJobId()
         ).ifPresent(existingProposal -> {
-            throw new RuntimeException("This expert has already submitted a proposal for this job");
+            throw new RuntimeException("Bạn đã gửi báo giá cho công việc này rồi");
         });
 
         Proposal proposal = new Proposal();
@@ -86,24 +86,24 @@ public class ProposalService {
     @Transactional
     public Proposal acceptProposal(Long proposalId) {
         Proposal proposal = proposalRepository.findById(proposalId)
-                .orElseThrow(() -> new RuntimeException("Proposal not found"));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy báo giá"));
 
         if (!"SUBMITTED".equalsIgnoreCase(proposal.getProposalStatus())) {
-            throw new RuntimeException("Only SUBMITTED proposals can be accepted");
+            throw new RuntimeException("Chỉ báo giá ở trạng thái SUBMITTED mới chấp nhận được");
         }
 
         Job job = proposal.getJob();
         if (!"OPEN".equalsIgnoreCase(job.getJobStatus())) {
-            throw new RuntimeException("Job is not open for assignment");
+            throw new RuntimeException("Công việc không còn mở để giao");
         }
 
         ClientProfile client = job.getClient();
         Wallet clientWallet = walletRepository.findByUserId(client.getUser().getId())
-                .orElseThrow(() -> new RuntimeException("Client wallet not found"));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy ví của Client"));
 
         BigDecimal price = proposal.getProposalPrice();
         if (clientWallet.getBalance().compareTo(price) < 0) {
-            throw new RuntimeException("Insufficient wallet balance to fund escrow");
+            throw new RuntimeException("Số dư ví không đủ để ký quỹ — hãy nạp thêm tiền vào ví");
         }
 
         clientWallet.setBalance(clientWallet.getBalance().subtract(price));
@@ -134,7 +134,7 @@ public class ProposalService {
                 notificationService.createNotification(
                         other.getExpert().getUser().getId(),
                         "PROPOSAL_REJECTED",
-                        "Bao gia cua ban cho cong viec '" + job.getTitle() + "' da bi tu choi.");
+                        "Báo giá của bạn cho công việc '" + job.getTitle() + "' đã bị từ chối.");
             }
         }
 
@@ -145,7 +145,7 @@ public class ProposalService {
         notificationService.createNotification(
                 proposal.getExpert().getUser().getId(),
                 "PROPOSAL_ACCEPTED",
-                "Bao gia cua ban cho cong viec '" + job.getTitle() + "' da duoc chap nhan!");
+                "Báo giá của bạn cho công việc '" + job.getTitle() + "' đã được chấp nhận!");
 
         return proposal;
     }
@@ -156,7 +156,7 @@ public class ProposalService {
 
     public Proposal getProposalById(Long id) {
         return proposalRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Proposal not found"));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy báo giá"));
     }
 
     public List<Proposal> getProposalsByJobId(Long jobId) {
@@ -169,24 +169,24 @@ public class ProposalService {
 
     private void validateProposalRequest(ProposalRequest request) {
         if (request.getExpertId() == null) {
-            throw new RuntimeException("Expert ID is required");
+            throw new RuntimeException("Thiếu mã Expert");
         }
 
         if (request.getJobId() == null) {
-            throw new RuntimeException("Job ID is required");
+            throw new RuntimeException("Thiếu mã công việc");
         }
 
         if (request.getCoverLetter() == null || request.getCoverLetter().trim().isEmpty()) {
-            throw new RuntimeException("Cover letter is required");
+            throw new RuntimeException("Vui lòng viết thư ngỏ");
         }
 
         if (request.getProposalPrice() == null ||
                 request.getProposalPrice().compareTo(BigDecimal.ZERO) <= 0) {
-            throw new RuntimeException("Proposal price must be greater than 0");
+            throw new RuntimeException("Giá báo phải lớn hơn 0");
         }
 
         if (request.getEstimatedDays() == null || request.getEstimatedDays() <= 0) {
-            throw new RuntimeException("Estimated days must be greater than 0");
+            throw new RuntimeException("Số ngày dự kiến phải lớn hơn 0");
         }
     }
 }

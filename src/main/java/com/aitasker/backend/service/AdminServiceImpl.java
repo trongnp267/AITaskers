@@ -38,32 +38,32 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public PendingAccountResponse getAccount(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found."));
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy người dùng."));
         return toResponse(user);
     }
 
     @Override
     public void approveAccount(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found."));
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy người dùng."));
         user.setStatus(AccountStatus.APPROVED);
         userRepository.save(user);
         notificationService.createNotification(
                 user.getId(),
                 "ACCOUNT_APPROVED",
-                "Tai khoan cua ban da duoc admin phe duyet. Ban co the dang nhap.");
+                "Tài khoản của bạn đã được admin phê duyệt. Bạn có thể đăng nhập.");
     }
 
     @Override
     public void rejectAccount(Long id, String reason) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found."));
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy người dùng."));
         user.setStatus(AccountStatus.REJECTED);
         userRepository.save(user);
         notificationService.createNotification(
                 user.getId(),
                 "ACCOUNT_REJECTED",
-                "Tai khoan cua ban da bi tu choi." + (reason != null && !reason.isBlank() ? " Ly do: " + reason : ""));
+                "Tài khoản của bạn đã bị từ chối." + (reason != null && !reason.isBlank() ? " Lý do: " + reason : ""));
     }
 
     @Override

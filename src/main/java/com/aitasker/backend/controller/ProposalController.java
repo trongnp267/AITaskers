@@ -36,7 +36,7 @@ public class ProposalController {
             Proposal created = proposalService.createProposal(request);
             return ResponseEntity.ok(Map.of(
                 "status", "success",
-                "message", "Gui bao gia thanh cong.",
+                "message", "Gửi báo giá thành công.",
                 "data", created
             ));
         } catch (Exception e) {

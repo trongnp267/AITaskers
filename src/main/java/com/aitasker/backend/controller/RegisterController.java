@@ -18,7 +18,7 @@ public class RegisterController {
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
         String result = userService.registerUser(request);
 
-        if (result.contains("Success")) {
+        if (result.contains("thành công")) {
             return ResponseEntity.ok(Map.of("status", "success", "message", result));
         } else {
             return ResponseEntity.badRequest().body(Map.of("status", "error", "message", result));

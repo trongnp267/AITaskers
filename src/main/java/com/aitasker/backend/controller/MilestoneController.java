@@ -31,7 +31,7 @@ public class MilestoneController {
             Milestone created = milestoneService.createMilestone(request);
             return ResponseEntity.ok(Map.of(
                 "status", "success",
-                "message", "Tao milestone thanh cong.",
+                "message", "Tạo milestone thành công.",
                 "data", created
             ));
         } catch (Exception e) {
@@ -49,7 +49,7 @@ public class MilestoneController {
             Milestone updated = milestoneService.updateMilestone(milestoneId, request);
             return ResponseEntity.ok(Map.of(
                 "status", "success",
-                "message", "Cap nhat milestone thanh cong.",
+                "message", "Cập nhật milestone thành công.",
                 "data", updated
             ));
         } catch (Exception e) {

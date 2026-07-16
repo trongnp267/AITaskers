@@ -44,7 +44,7 @@ public class EscrowController {
         Escrow escrow = escrowService.releaseEscrow(escrowId);
         return ResponseEntity.ok(Map.of(
             "status", "success",
-            "message", "Da giai ngan tien ky quy cho Expert.",
+            "message", "Đã giải ngân tiền ký quỹ cho Expert.",
             "data", escrow
         ));
     }
@@ -54,7 +54,7 @@ public class EscrowController {
         Escrow escrow = escrowService.refundEscrow(escrowId);
         return ResponseEntity.ok(Map.of(
             "status", "success",
-            "message", "Da hoan tien ky quy ve cho Client.",
+            "message", "Đã hoàn tiền ký quỹ về cho Client.",
             "data", escrow
         ));
     }

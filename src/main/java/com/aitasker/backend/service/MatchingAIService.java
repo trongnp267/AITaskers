@@ -76,13 +76,13 @@ public class MatchingAIService {
 
     public List<ExpertResult> matchExpertsForJob(Long jobId) {
         Job job = jobRepository.findById(jobId)
-                .orElseThrow(() -> new ResourceNotFoundException("Job not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy công việc"));
         return matchExperts(buildJobDescription(job));
     }
 
     public Map<String, Object> analyzeJobDescription(String description) {
         if (description == null || description.isBlank()) {
-            throw new BadRequestException("Job description is required");
+            throw new BadRequestException("Thiếu mô tả công việc");
         }
 
         String prompt = "Phan tich mo ta cong viec sau va tra ve JSON dang " +
@@ -100,7 +100,7 @@ public class MatchingAIService {
 
         Map<String, Object> fallback = new HashMap<>();
         fallback.put("aiEnabled", false);
-        fallback.put("summary", "Khong the phan tich bang AI (chua cau hinh Gemini API key hoac loi ket noi).");
+        fallback.put("summary", "Không thể phân tích bằng AI (chưa cấu hình Gemini API key hoặc lỗi kết nối).");
         fallback.put("suggestedSkills", new ArrayList<>());
         fallback.put("estimatedComplexity", "UNKNOWN");
         return fallback;

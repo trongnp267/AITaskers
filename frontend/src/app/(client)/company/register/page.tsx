@@ -40,7 +40,7 @@ export default function Page() {
         companyName: formData.companyName,
         description: formData.description,
       });
-      if (data.message?.includes("Success")) {
+      if (data.message?.includes("thành công")) {
         toast.success("Đăng ký thành công. Vui lòng chờ admin duyệt.");
         window.location.href = "/login";
       } else {

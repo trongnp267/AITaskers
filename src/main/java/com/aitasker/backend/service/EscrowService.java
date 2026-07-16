@@ -45,16 +45,16 @@ public class EscrowService {
     @Transactional
     public Escrow releaseEscrow(Long escrowId) {
         Escrow escrow = escrowRepository.findById(escrowId)
-                .orElseThrow(() -> new ResourceNotFoundException("Escrow not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy quỹ ký quỹ"));
 
         if (!"HELD".equalsIgnoreCase(escrow.getEscrowStatus())) {
-            throw new BadRequestException("Only HELD escrows can be released");
+            throw new BadRequestException("Chỉ quỹ ký quỹ đang HELD mới giải ngân được");
         }
 
         BigDecimal amount = escrow.getAmount();
 
         Wallet expertWallet = walletRepository.findByUserId(escrow.getExpert().getUser().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Expert wallet not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy ví của Expert"));
         expertWallet.setBalance(expertWallet.getBalance().add(amount));
         walletRepository.save(expertWallet);
 
@@ -81,7 +81,7 @@ public class EscrowService {
         notificationService.createNotification(
                 expert.getUser().getId(),
                 "ESCROW_RELEASED",
-                "Ban da nhan " + amount + " tu quy ky quy cua cong viec '" + job.getTitle() + "'.");
+                "Bạn đã nhận " + amount + " từ quỹ ký quỹ của công việc '" + job.getTitle() + "'.");
 
         return escrow;
     }
@@ -89,16 +89,16 @@ public class EscrowService {
     @Transactional
     public Escrow refundEscrow(Long escrowId) {
         Escrow escrow = escrowRepository.findById(escrowId)
-                .orElseThrow(() -> new ResourceNotFoundException("Escrow not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy quỹ ký quỹ"));
 
         if (!"HELD".equalsIgnoreCase(escrow.getEscrowStatus())) {
-            throw new BadRequestException("Only HELD escrows can be refunded");
+            throw new BadRequestException("Chỉ quỹ ký quỹ đang HELD mới hoàn tiền được");
         }
 
         BigDecimal amount = escrow.getAmount();
 
         Wallet clientWallet = walletRepository.findByUserId(escrow.getClient().getUser().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Client wallet not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy ví của Client"));
         clientWallet.setBalance(clientWallet.getBalance().add(amount));
         walletRepository.save(clientWallet);
 
@@ -120,7 +120,7 @@ public class EscrowService {
         notificationService.createNotification(
                 escrow.getClient().getUser().getId(),
                 "ESCROW_REFUNDED",
-                "Ban da duoc hoan " + amount + " tu quy ky quy cua cong viec '" + job.getTitle() + "'.");
+                "Bạn đã được hoàn " + amount + " từ quỹ ký quỹ của công việc '" + job.getTitle() + "'.");
 
         return escrow;
     }

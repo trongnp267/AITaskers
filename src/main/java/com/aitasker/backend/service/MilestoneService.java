@@ -41,7 +41,7 @@ public class MilestoneService {
         validateMilestoneRequest(request);
 
         Job job = jobRepository.findById(request.getProjectId())
-                .orElseThrow(() -> new RuntimeException("Khong tim thay cong viec (Job) cho milestone nay"));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy công việc cho milestone này"));
 
         Milestone milestone = new Milestone();
         milestone.setProject(job);
@@ -56,10 +56,10 @@ public class MilestoneService {
 
     public Milestone updateMilestone(Long milestoneId, MilestoneRequest request) {
         Milestone milestone = milestoneRepository.findById(milestoneId)
-                .orElseThrow(() -> new RuntimeException("Khong tim thay giai doan nay!"));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy giai đoạn này!"));
 
         if ("APPROVED".equalsIgnoreCase(milestone.getStatus())) {
-            throw new RuntimeException("Khong the sua giai doan da duoc duyet/giai ngan");
+            throw new RuntimeException("Không thể sửa giai đoạn đã được duyệt/giải ngân");
         }
 
         if (request.getTitle() != null && !request.getTitle().trim().isEmpty()) {
@@ -70,7 +70,7 @@ public class MilestoneService {
         }
         if (request.getAmount() != null) {
             if (request.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
-                throw new RuntimeException("So tien giai doan phai lon hon 0");
+                throw new RuntimeException("Số tiền giai đoạn phải lớn hơn 0");
             }
             milestone.setAmount(request.getAmount());
         }
@@ -83,19 +83,19 @@ public class MilestoneService {
 
     private void validateMilestoneRequest(MilestoneRequest request) {
         if (request.getProjectId() == null) {
-            throw new RuntimeException("projectId (job id) la bat buoc");
+            throw new RuntimeException("projectId (mã công việc) là bắt buộc");
         }
         if (request.getTitle() == null || request.getTitle().trim().isEmpty()) {
-            throw new RuntimeException("Tieu de milestone la bat buoc");
+            throw new RuntimeException("Tiêu đề milestone là bắt buộc");
         }
         if (request.getAmount() == null || request.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
-            throw new RuntimeException("So tien milestone phai lon hon 0");
+            throw new RuntimeException("Số tiền milestone phải lớn hơn 0");
         }
     }
 
     public Milestone submitMilestone(Long milestoneId) {
         Milestone milestone = milestoneRepository.findById(milestoneId)
-                .orElseThrow(() -> new RuntimeException("Khong tim thay giai doan nay!"));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy giai đoạn này!"));
 
         milestone.setStatus("WAITING_FOR_APPROVAL");
         return milestoneRepository.save(milestone);
@@ -104,30 +104,30 @@ public class MilestoneService {
     @Transactional
     public Milestone approveMilestone(Long milestoneId) {
         Milestone milestone = milestoneRepository.findById(milestoneId)
-                .orElseThrow(() -> new RuntimeException("Khong tim thay giai doan nay!"));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy giai đoạn này!"));
 
         if (!"WAITING_FOR_APPROVAL".equalsIgnoreCase(milestone.getStatus())) {
-            throw new RuntimeException("Chi co the duyet giai doan dang o trang thai cho duyet");
+            throw new RuntimeException("Chỉ có thể duyệt giai đoạn đang ở trạng thái chờ duyệt");
         }
 
         Escrow escrow = escrowRepository.findByJobJobId(milestone.getProjectId())
-                .orElseThrow(() -> new RuntimeException("Khong tim thay quy ky quy (Escrow) cua cong viec nay"));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy quỹ ký quỹ (Escrow) của công việc này"));
 
         if (!"HELD".equalsIgnoreCase(escrow.getEscrowStatus())) {
-            throw new RuntimeException("Quy ky quy khong o trang thai HELD, khong the giai ngan");
+            throw new RuntimeException("Quỹ ký quỹ không ở trạng thái HELD, không thể giải ngân");
         }
 
         BigDecimal amount = milestone.getAmount();
         if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new RuntimeException("So tien giai doan khong hop le");
+            throw new RuntimeException("Số tiền giai đoạn không hợp lệ");
         }
 
         if (escrow.getAmount().compareTo(amount) < 0) {
-            throw new RuntimeException("So tien con lai trong quy ky quy khong du de giai ngan giai doan nay");
+            throw new RuntimeException("Số tiền còn lại trong quỹ ký quỹ không đủ để giải ngân giai đoạn này");
         }
 
         Wallet expertWallet = walletRepository.findByUserId(escrow.getExpert().getUser().getId())
-                .orElseThrow(() -> new RuntimeException("Khong tim thay vi cua Expert"));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy ví của Expert"));
 
         expertWallet.setBalance(expertWallet.getBalance().add(amount));
         walletRepository.save(expertWallet);
@@ -151,7 +151,7 @@ public class MilestoneService {
         notificationService.createNotification(
                 escrow.getExpert().getUser().getId(),
                 "MILESTONE_APPROVED",
-                "Giai doan '" + milestone.getTitle() + "' da duoc duyet va giai ngan " + amount);
+                "Giai đoạn '" + milestone.getTitle() + "' đã được duyệt và giải ngân " + amount);
 
         List<Milestone> allMilestones = milestoneRepository.findByProject_JobId(milestone.getProjectId());
         boolean allApproved = allMilestones.stream()
@@ -159,7 +159,7 @@ public class MilestoneService {
 
         if (allApproved) {
             Job job = jobRepository.findById(milestone.getProjectId())
-                    .orElseThrow(() -> new RuntimeException("Khong tim thay cong viec"));
+                    .orElseThrow(() -> new RuntimeException("Không tìm thấy công việc"));
             job.setJobStatus("COMPLETED");
             job.setUpdatedAt(LocalDateTime.now());
             jobRepository.save(job);
@@ -175,10 +175,10 @@ public class MilestoneService {
 
     public Milestone rejectMilestone(Long milestoneId) {
         Milestone milestone = milestoneRepository.findById(milestoneId)
-                .orElseThrow(() -> new RuntimeException("Khong tim thay giai doan nay!"));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy giai đoạn này!"));
 
         if (!"WAITING_FOR_APPROVAL".equalsIgnoreCase(milestone.getStatus())) {
-            throw new RuntimeException("Chi co the tu choi giai doan dang o trang thai cho duyet");
+            throw new RuntimeException("Chỉ có thể từ chối giai đoạn đang ở trạng thái chờ duyệt");
         }
 
         milestone.setStatus("REJECTED");

@@ -37,13 +37,13 @@ public class AdminController {
     @PutMapping("/{id}/approve")
     public ResponseEntity<String> approveAccount(@PathVariable Long id) {
         adminService.approveAccount(id);
-        return ResponseEntity.ok("Account approved successfully.");
+        return ResponseEntity.ok("Đã phê duyệt tài khoản thành công.");
     }
 
     @PutMapping("/{id}/reject")
     public ResponseEntity<String> rejectAccount(@PathVariable Long id,
                                                 @RequestBody RejectRequest request) {
         adminService.rejectAccount(id, request.getReason());
-        return ResponseEntity.ok("Account rejected successfully.");
+        return ResponseEntity.ok("Đã từ chối tài khoản.");
     }
 }

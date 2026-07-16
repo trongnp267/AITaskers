@@ -53,7 +53,7 @@ public class LoginController {
 
         Map<String, Object> body = new HashMap<>();
         body.put("status", "success");
-        body.put("message", "Login Successful");
+        body.put("message", "Đăng nhập thành công");
         body.put("token", token);
         body.put("user", userMap);
 

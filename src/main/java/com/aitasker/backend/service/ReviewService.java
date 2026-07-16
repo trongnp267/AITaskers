@@ -38,10 +38,10 @@ public class ReviewService {
         validate(request);
 
         jobRepository.findById(request.getJobId())
-                .orElseThrow(() -> new ResourceNotFoundException("Job not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy công việc"));
 
         ExpertProfile expert = expertProfileRepository.findById(request.getExpertId())
-                .orElseThrow(() -> new ResourceNotFoundException("Expert not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy Expert"));
 
         Review review = new Review();
         review.setJobId(request.getJobId());
@@ -56,7 +56,7 @@ public class ReviewService {
         notificationService.createNotification(
                 expert.getUser().getId(),
                 "NEW_REVIEW",
-                "Ban vua nhan mot danh gia moi: " + request.getRating() + " sao.");
+                "Bạn vừa nhận một đánh giá mới: " + request.getRating() + " sao.");
 
         return saved;
     }
@@ -77,16 +77,16 @@ public class ReviewService {
 
     private void validate(ReviewRequest request) {
         if (request.getJobId() == null) {
-            throw new BadRequestException("Job ID is required");
+            throw new BadRequestException("Thiếu mã công việc");
         }
         if (request.getReviewerUserId() == null) {
-            throw new BadRequestException("Reviewer user ID is required");
+            throw new BadRequestException("Thiếu mã người đánh giá");
         }
         if (request.getExpertId() == null) {
-            throw new BadRequestException("Expert ID is required");
+            throw new BadRequestException("Thiếu mã Expert");
         }
         if (request.getRating() == null || request.getRating() < 1 || request.getRating() > 5) {
-            throw new BadRequestException("Rating must be between 1 and 5");
+            throw new BadRequestException("Điểm đánh giá phải từ 1 đến 5");
         }
     }
 }

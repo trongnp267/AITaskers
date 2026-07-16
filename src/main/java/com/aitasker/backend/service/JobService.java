@@ -36,7 +36,7 @@ public class JobService {
         validateJobRequest(request);
 
         ClientProfile client = clientProfileRepository.findById(request.getClientId())
-                .orElseThrow(() -> new RuntimeException("Client profile not found"));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy hồ sơ công ty (Client)"));
 
         Job job = new Job();
 
@@ -72,58 +72,58 @@ public class JobService {
 
     public Job getJobById(Long id) {
         return jobRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Job not found"));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy công việc"));
     }
 
     private void validateJobRequest(JobRequest request) {
         if (request.getClientId() == null) {
-            throw new RuntimeException("Client ID is required");
+            throw new RuntimeException("Thiếu mã Client");
         }
 
         if (request.getTitle() == null || request.getTitle().trim().isEmpty()) {
-            throw new RuntimeException("Job title is required");
+            throw new RuntimeException("Vui lòng nhập tên công việc");
         }
 
         if (request.getDescription() == null || request.getDescription().trim().isEmpty()) {
-            throw new RuntimeException("Job description is required");
+            throw new RuntimeException("Vui lòng nhập mô tả công việc");
         }
 
         if (request.getPositionRequirement() == null || request.getPositionRequirement().trim().isEmpty()) {
-            throw new RuntimeException("Position requirement is required");
+            throw new RuntimeException("Vui lòng nhập yêu cầu vị trí");
         }
 
         if (request.getJobSkills() == null || request.getJobSkills().isEmpty()) {
-            throw new RuntimeException("Job skills are required");
+            throw new RuntimeException("Vui lòng thêm ít nhất một kỹ năng");
         }
 
         for (String skill : request.getJobSkills()) {
             if (skill == null || skill.trim().isEmpty()) {
-                throw new RuntimeException("Job skill cannot be empty");
+                throw new RuntimeException("Tên kỹ năng không được để trống");
             }
         }
 
         if (request.getMinExperienceYears() == null) {
-            throw new RuntimeException("Minimum experience years is required");
+            throw new RuntimeException("Vui lòng nhập số năm kinh nghiệm tối thiểu");
         }
 
         if (request.getMinExperienceYears() < 0) {
-            throw new RuntimeException("Minimum experience years must be greater than or equal to 0");
+            throw new RuntimeException("Số năm kinh nghiệm phải lớn hơn hoặc bằng 0");
         }
 
         if (request.getBudgetMin() == null || request.getBudgetMax() == null) {
-            throw new RuntimeException("Budget min and budget max are required");
+            throw new RuntimeException("Vui lòng nhập ngân sách tối thiểu và tối đa");
         }
 
         if (request.getBudgetMin().compareTo(request.getBudgetMax()) > 0) {
-            throw new RuntimeException("Budget min must be less than or equal to budget max");
+            throw new RuntimeException("Ngân sách tối thiểu phải nhỏ hơn hoặc bằng ngân sách tối đa");
         }
 
         if (request.getDeadline() == null) {
-            throw new RuntimeException("Deadline is required");
+            throw new RuntimeException("Vui lòng chọn ngày hết hạn");
         }
 
         if (request.getDeadline().isBefore(LocalDate.now())) {
-            throw new RuntimeException("Deadline must be in the future");
+            throw new RuntimeException("Ngày hết hạn phải ở tương lai");
         }
     }
 }
