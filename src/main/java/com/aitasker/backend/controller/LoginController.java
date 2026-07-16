@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -24,23 +23,13 @@ public class LoginController {
         String username = loginData.get("username");
         String password = loginData.get("password");
 
-        Optional<User> userOpt = userService.authenticate(username, password);
+        User user = userService.authenticate(username, password);
+        String token = jwtService.generateToken(user);
 
-        if (userOpt.isPresent()) {
-            User user = userOpt.get();
-
-            String token = jwtService.generateToken(user);
-
-            return ResponseEntity.ok(Map.of(
-                "status", "success",
-                "message", "Login Successful",
-                "token", token
-            ));
-        } else {
-            return ResponseEntity.status(401).body(Map.of(
-                "status", "error",
-                "message", "Invalid username or password"
-            ));
-        }
+        return ResponseEntity.ok(Map.of(
+            "status", "success",
+            "message", "Login Successful",
+            "token", token
+        ));
     }
 }

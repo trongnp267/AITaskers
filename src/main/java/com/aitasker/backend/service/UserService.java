@@ -2,6 +2,7 @@ package com.aitasker.backend.service;
 
 import com.aitasker.backend.dto.RegisterRequest;
 import com.aitasker.backend.entity.*;
+import com.aitasker.backend.exception.BadRequestException;
 import com.aitasker.backend.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -10,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -23,9 +23,22 @@ public class UserService {
     @Autowired private ExpertProfileRepository expertProfileRepository;
     @Autowired private BCryptPasswordEncoder passwordEncoder;
 
-    public Optional<User> authenticate(String username, String password) {
-        return userRepository.findByUsername(username)
-                .filter(user -> passwordEncoder.matches(password, user.getPassword()));
+    public User authenticate(String username, String password) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new BadRequestException("Username does not exist."));
+
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new BadRequestException("Incorrect password.");
+        }
+
+        if (user.getStatus() == AccountStatus.PENDING) {
+            throw new BadRequestException("Your account is awaiting admin approval.");
+        }
+        if (user.getStatus() == AccountStatus.REJECTED) {
+            throw new BadRequestException("Your account has been rejected.");
+        }
+
+        return user;
     }
 
     @Transactional
@@ -48,6 +61,7 @@ public class UserService {
         newUser.setUsername(request.getUsername());
         newUser.setPassword(hashedPassword);
         newUser.setRole(request.getRole().toUpperCase());
+        newUser.setStatus(AccountStatus.PENDING);
         User savedUser = userRepository.save(newUser);
 
         Wallet wallet = new Wallet();

@@ -28,6 +28,7 @@ public class MilestoneService {
     private final WalletRepository walletRepository;
     private final TransactionRepository transactionRepository;
     private final JobRepository jobRepository;
+    private final NotificationService notificationService;
 
     public List<Milestone> getMilestonesByProjectId(Long projectId) {
         return milestoneRepository.findByProject_JobId(projectId);
@@ -143,6 +144,11 @@ public class MilestoneService {
 
         milestone.setStatus("APPROVED");
         milestoneRepository.save(milestone);
+
+        notificationService.createNotification(
+                escrow.getExpert().getUser().getId(),
+                "MILESTONE_APPROVED",
+                "Giai doan '" + milestone.getTitle() + "' da duoc duyet va giai ngan " + amount);
 
         List<Milestone> allMilestones = milestoneRepository.findByProject_JobId(milestone.getProjectId());
         boolean allApproved = allMilestones.stream()

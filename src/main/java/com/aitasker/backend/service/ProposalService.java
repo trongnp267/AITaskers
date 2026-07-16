@@ -31,6 +31,7 @@ public class ProposalService {
     private final EscrowRepository escrowRepository;
     private final WalletRepository walletRepository;
     private final TransactionRepository transactionRepository;
+    private final NotificationService notificationService;
 
     public ProposalService(
             ProposalRepository proposalRepository,
@@ -38,7 +39,8 @@ public class ProposalService {
             JobRepository jobRepository,
             EscrowRepository escrowRepository,
             WalletRepository walletRepository,
-            TransactionRepository transactionRepository
+            TransactionRepository transactionRepository,
+            NotificationService notificationService
     ) {
         this.proposalRepository = proposalRepository;
         this.expertProfileRepository = expertProfileRepository;
@@ -46,6 +48,7 @@ public class ProposalService {
         this.escrowRepository = escrowRepository;
         this.walletRepository = walletRepository;
         this.transactionRepository = transactionRepository;
+        this.notificationService = notificationService;
     }
 
     public Proposal createProposal(ProposalRequest request) {
@@ -128,12 +131,21 @@ public class ProposalService {
             if (!other.getProposalId().equals(proposal.getProposalId())) {
                 other.setProposalStatus("REJECTED");
                 proposalRepository.save(other);
+                notificationService.createNotification(
+                        other.getExpert().getUser().getId(),
+                        "PROPOSAL_REJECTED",
+                        "Bao gia cua ban cho cong viec '" + job.getTitle() + "' da bi tu choi.");
             }
         }
 
         job.setJobStatus("ASSIGNED");
         job.setUpdatedAt(LocalDateTime.now());
         jobRepository.save(job);
+
+        notificationService.createNotification(
+                proposal.getExpert().getUser().getId(),
+                "PROPOSAL_ACCEPTED",
+                "Bao gia cua ban cho cong viec '" + job.getTitle() + "' da duoc chap nhan!");
 
         return proposal;
     }
