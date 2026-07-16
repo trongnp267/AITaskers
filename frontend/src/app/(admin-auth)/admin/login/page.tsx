@@ -2,9 +2,66 @@
 
 import { useState } from "react";
 import { Eye, EyeOff, ShieldCheck } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { login } from "@/app/services/authService";
+
 
 export default function AdminLoginPage() {
+  const router = useRouter();
+
+  const [username, setUsername] = useState("");
+
+  const [password, setPassword] = useState("");
+
+  const [loading, setLoading] = useState(false);
+
+  const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
+  const handleLogin = async (
+      e: React.FormEvent<HTMLFormElement>
+  ) => {
+
+      e.preventDefault();
+
+      try {
+
+          setLoading(true);
+
+          setError("");
+
+          const response = await login({
+
+              username,
+
+              password,
+
+          });
+
+          if (response.user.role !== "ADMIN") {
+              setError("You do not have permission to access the admin panel.");
+              return;
+          }
+
+          localStorage.setItem("token", response.token);
+          localStorage.setItem("user", JSON.stringify(response.user));
+
+          router.push("/admin/dashboard");
+
+      } catch (error: any) {
+
+          setError(
+              error.response?.data?.message ??
+              "Login failed"
+          );
+
+      } finally {
+
+          setLoading(false);
+
+      }
+
+  };
 
   return (
     <div className="min-h-screen flex">
@@ -20,17 +77,18 @@ export default function AdminLoginPage() {
             </p>
           </div>
 
-          <form className="space-y-6">
+          <form onSubmit={handleLogin} className="space-y-6">
 
             <div>
               <label className="block mb-2 font-medium">
-                Email
+                username
               </label>
 
               <input
-                type="email"
-                placeholder="admin@example.com"
+                type="text"
                 className="w-full rounded-xl border p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
               />
             </div>
 
@@ -43,8 +101,9 @@ export default function AdminLoginPage() {
 
                 <input
                   type={showPassword ? "text" : "password"}
-                  placeholder="********"
                   className="w-full rounded-xl border p-3 pr-12 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
 
                 <button
@@ -62,10 +121,26 @@ export default function AdminLoginPage() {
               </div>
             </div>
 
+            {
+                error && (
+
+                    <p className="text-red-500 text-sm">
+
+                        {error}
+
+                    </p>
+
+                )
+            }
+
             <button
               className="w-full bg-indigo-600 hover:bg-indigo-700 transition text-white py-3 rounded-xl font-semibold"
             >
-              Login
+              {
+                  loading
+                      ? "Signing in..."
+                      : "Login"
+              }
             </button>
 
           </form>
